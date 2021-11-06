@@ -15,6 +15,12 @@ export default function dashboard() {
                         </div>
 
                         <div className="section-body">
+                            <div className="hero bg-primary text-white">
+                                <div className="hero-inner">
+                                    <h2>Welcome Back, Admin</h2>
+                                    <p className="lead">A Dashboard always tell you our system performances.</p>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </div>
