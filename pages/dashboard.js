@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Layout from "../components/layouts/Layout";
+import { Hero } from "../components/interface";
 
 export default function dashboard() {
     return (
@@ -15,12 +16,11 @@ export default function dashboard() {
                         </div>
 
                         <div className="section-body">
-                            <div className="hero bg-primary text-white">
-                                <div className="hero-inner">
-                                    <h2>Welcome Back, Admin</h2>
-                                    <p className="lead">A Dashboard always tell you our system performances.</p>
-                                </div>
-                            </div>
+                            <Hero 
+                                className="hero bg-primary text-white"
+                                title="Welcome Back, Admin" 
+                                lead="A Dashboard always tell you our system performances." 
+                            />
                         </div>
                     </section>
                 </div>

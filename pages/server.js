@@ -1,8 +1,73 @@
 import Head from "next/head";
 import Layout from "../components/layouts/Layout";
 import Link from "next/link";
+import React from "react";
+import swal from "sweetalert";
 
-function server() {
+function server({ instances }) {
+
+    async function startInstance(id) {
+        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances/" + id + "/start")
+        const instance = await res.json()
+        swal({
+            title: instance.status,
+            text: instance.message,
+            icon: "success",
+        });
+    };
+
+    async function stopInstance(id) {
+        swal({
+            title: "Are you sure ?",
+            text: "Once its stopped, you can still start your instance again",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then(async (willDelete) => {
+            if (willDelete) {
+                const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances/" + id + "/stop")
+                const instance = await res.json()
+                swal({
+                    title: instance.status,
+                    text: instance.message,
+                    icon: "success",
+                });
+            }
+        });
+    };
+
+    async function rebootInstance(id) {
+        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances/" + id + "/reboot")
+        const instance = await res.json()
+        swal({
+            title: instance.status,
+            text: instance.message,
+            icon: "success",
+        });
+    };
+
+    async function terminateInstance(id) {
+        swal({
+            title: "Are you sure ?",
+            text: "Once its terminated, you will not able to restore your instance",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then(async (willDelete) => {
+            if (willDelete) {
+                const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances/" + id + "/terminate")
+                const instance = await res.json()
+                swal({
+                    title: instance.status,
+                    text: instance.message,
+                    icon: "success",
+                });
+            }
+        });
+    };
+
     return (
         <>
             <Head>
@@ -20,13 +85,88 @@ function server() {
                         </div>
 
                         <div className="section-body">
-                            
+                            <h2 className="section-title">Cloud Server</h2>
+                            <p className="section-lead">
+                                This is the list of running servers
+                            </p>
+                            <div className="row">
+                                <div className="col-md-12 col-sm-6 col-lg-12">
+                                    <div className="card">
+                                        <div className="card-header">
+                                            <h4>Instances</h4>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="table-responsive">
+                                                <table className="table table-bordered table-md">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Name</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    {instances.data.map((data) => {
+                                                        return (
+                                                            <tbody key={data.ReservationId}>
+                                                                {data.Instances.map((instance) => {
+                                                                    return (
+                                                                        <tr key={instance.InstanceId}>
+                                                                            <td>
+                                                                                {instance.InstanceId}
+                                                                            </td>
+                                                                            <td>{instance.Tags.find((tag) => tag.Key == "Name").Value}</td>
+                                                                            <td>{instance.State.Name}</td>
+                                                                            <td>
+                                                                                <div className="btn-group" role="group" aria-label="Button Operation">
+                                                                                    <button type="button" className="btn btn-primary btn-icon icon-left" onClick={() => startInstance(instance.InstanceId)}>
+                                                                                        <i className="far fa-play-circle"></i>Start
+                                                                                    </button>
+                                                                                    <button type="button" className="btn btn-warning btn-icon icon-left" onClick={() => stopInstance(instance.InstanceId)}>
+                                                                                        <i className="fas fa-stop-circle"></i>Stop
+                                                                                    </button>
+                                                                                    <button type="button" className="btn btn-dark btn-icon icon-left" onClick={() => rebootInstance(instance.InstanceId)}>
+                                                                                        <i className="fas fa-bolt"></i>Reboot
+                                                                                    </button>
+                                                                                    <button type="button" className="btn btn-danger btn-icon icon-left" onClick={() => terminateInstance(instance.InstanceId)}>
+                                                                                        <i className="fas fa-power-off"></i>Terminate
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                })}
+                                                            </tbody>
+                                                        );
+                                                    })}
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </div>
             </Layout>
         </>
     );
+}
+
+export async function getStaticProps(context) {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances")
+    const instances = await res.json()
+
+    if (!instances) {
+        return {
+            notFound: true,
+        }
+    }
+
+    return {
+        props: { instances },
+        revalidate: 60,
+    }
 }
 
 export default server;
