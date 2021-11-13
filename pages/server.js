@@ -3,8 +3,10 @@ import Layout from "../components/layouts/Layout";
 import Link from "next/link";
 import React from "react";
 import swal from "sweetalert";
+import { useRouter } from "next/router";
 
 function server({ instances }) {
+    const router = useRouter();
 
     async function startInstance(id) {
         const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances/" + id + "/start")
@@ -13,6 +15,8 @@ function server({ instances }) {
             title: instance.status,
             text: instance.message,
             icon: "success",
+        }).then(function() {
+            router.reload('/server');
         });
     };
 
@@ -32,6 +36,8 @@ function server({ instances }) {
                     title: instance.status,
                     text: instance.message,
                     icon: "success",
+                }).then(function() {
+                    router.reload('/server');
                 });
             }
         });
@@ -44,6 +50,8 @@ function server({ instances }) {
             title: instance.status,
             text: instance.message,
             icon: "success",
+        }).then(function() {
+            router.reload('/server');
         });
     };
 
@@ -63,6 +71,8 @@ function server({ instances }) {
                     title: instance.status,
                     text: instance.message,
                     icon: "success",
+                }).then(function() {
+                    router.reload('/server');
                 });
             }
         });

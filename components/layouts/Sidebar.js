@@ -33,7 +33,7 @@ function Sidebar() {
                 <li className="menu-header">Infrastructure</li>
                 <li className={router.pathname == "/infrastructure" ? "active" : ""}>
                     <Link href="/infrastructure">
-                        <a className="nav-link"><i className="fas fa-cloud-upload-alt"></i> <span>Upload Code</span></a>
+                        <a className="nav-link"><i className="fas fa-cloud-upload-alt"></i> <span>Code</span></a>
                     </Link>
                 </li>
             </ul>
