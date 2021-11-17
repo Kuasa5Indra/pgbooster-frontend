@@ -54,9 +54,16 @@ function edit() {
                 router.push('/infrastructure');
             });
         }).catch((error) => {
-            console.error("Error on", error.response.headers);
-            console.log(error.response.data);
-            console.log(error.response.status);
+            var errorData = error.response.data.errors;
+            var errorMessages = errorData.map(({msg}) => msg)
+            swal({
+                title: "Error",
+                text: errorMessages.toString(),
+                icon: "error",
+            })
+            // console.error("Error on", error.response.headers);
+            // console.log(error.response.data);
+            // console.log(error.response.status);
         });
     };
 
