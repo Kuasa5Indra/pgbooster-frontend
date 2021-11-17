@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
-import axios from 'axios';
+import api from "../../utils/api";
 
 function create() {
     const router = useRouter();
@@ -37,8 +37,7 @@ function create() {
         const formData = new FormData();
         formData.append("name", query.stackname);
         formData.append('codeFile', query.code);
-        axios.post(
-            process.env.NEXT_PUBLIC_API_URL + "/stacks",
+        api.post("/stacks",
             formData,
             {
                 headers: {

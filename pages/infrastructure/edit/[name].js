@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Layout from "../../../components/layouts/Layout";
 import Link from "next/link";
-import axios from "axios";
+import api from "../../../utils/api";
 import { useState } from "react";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
@@ -38,8 +38,7 @@ function edit() {
         const formData = new FormData();
         formData.append("name", query.stackname);
         formData.append('codeFile', query.code);
-        axios.post(
-            process.env.NEXT_PUBLIC_API_URL + "/stacks/update",
+        api.post("/stacks/update",
             formData,
             {
                 headers: {

@@ -2,7 +2,7 @@ import Head from "next/head";
 import Layout from "../../components/layouts/Layout";
 import Link from "next/link";
 import dateFormat from "dateformat";
-import axios from "axios";
+import api from "../../utils/api";
 import { useRouter } from 'next/router'
 
 function show({ stack }) {
@@ -59,7 +59,7 @@ function show({ stack }) {
 }
 
 export async function getStaticPaths() {
-    const res = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/stacks")
+    const res = await api.get("/stacks")
     const stacks = await res.data.data
 
     const paths = stacks.map((stack) => ({
@@ -70,7 +70,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-    const res = await axios.get(process.env.NEXT_PUBLIC_API_URL + `/stacks/describe?name=${params.name}`)
+    const res = await api.get(`/stacks/describe?name=${params.name}`)
     const stack = await res.data.data
     return { props: { stack } }
 }

@@ -3,7 +3,7 @@ import Layout from "../../components/layouts/Layout";
 import Link from "next/link";
 import dateFormat from "dateformat";
 import { useRouter } from "next/router";
-import axios from "axios";
+import api from "../../utils/api";
 import swal from "sweetalert";
 
 function infrastructure({ stacks }) {
@@ -19,9 +19,7 @@ function infrastructure({ stacks }) {
         })
         .then((willDelete) => {
             if(willDelete){
-                axios.delete(
-                    process.env.NEXT_PUBLIC_API_URL + "/stacks?name=" + name
-                )
+                api.delete("/stacks?name=" + name)
                 .then((response) => {
                     swal({
                         title: response.data.status,
@@ -124,7 +122,7 @@ function infrastructure({ stacks }) {
 }
 
 export async function getStaticProps(context) {
-    const res = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/stacks")
+    const res = await api.get('/stacks')
     const stacks = await res.data
     
     if (!stacks) {

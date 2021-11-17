@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Layout from "../components/layouts/Layout";
 import Link from "next/link";
-import React from "react";
+import api from "../utils/api";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
 
@@ -9,8 +9,8 @@ function server({ instances }) {
     const router = useRouter();
 
     async function startInstance(id) {
-        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances/" + id + "/start")
-        const instance = await res.json()
+        const res = await api.get("/instances/" + id + "/start")
+        const instance = await res.data
         swal({
             title: instance.status,
             text: instance.message,
@@ -30,8 +30,8 @@ function server({ instances }) {
         })
         .then(async (willDelete) => {
             if (willDelete) {
-                const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances/" + id + "/stop")
-                const instance = await res.json()
+                const res = await api.get("/instances/" + id + "/stop")
+                const instance = await res.data
                 swal({
                     title: instance.status,
                     text: instance.message,
@@ -44,8 +44,8 @@ function server({ instances }) {
     };
 
     async function rebootInstance(id) {
-        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances/" + id + "/reboot")
-        const instance = await res.json()
+        const res = await api.get("/instances/" + id + "/reboot")
+        const instance = await res.data
         swal({
             title: instance.status,
             text: instance.message,
@@ -65,8 +65,8 @@ function server({ instances }) {
         })
         .then(async (willDelete) => {
             if (willDelete) {
-                const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances/" + id + "/terminate")
-                const instance = await res.json()
+                const res = await api.get("/instances/" + id + "/terminate")
+                const instance = await res.data
                 swal({
                     title: instance.status,
                     text: instance.message,
@@ -164,8 +164,8 @@ function server({ instances }) {
 }
 
 export async function getStaticProps(context) {
-    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/instances")
-    const instances = await res.json()
+    const res = await api.get('/instances')
+    const instances = await res.data
 
     if (!instances) {
         return {
