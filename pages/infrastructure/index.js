@@ -133,7 +133,7 @@ export async function getStaticProps(context) {
 
     return {
         props: { stacks },
-        revalidate: 60,
+        revalidate: 10,
     }
 }
 
