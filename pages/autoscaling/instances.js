@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Layout from "../../components/layouts/Layout";
 import api from "../../utils/api";
 
-const instances = ({instances}) => {
+const instances = ({items}) => {
     return (
         <>
             <Head>
@@ -45,7 +45,7 @@ const instances = ({instances}) => {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {instances.data.map((data) => {
+                                                        {items.data.map((data) => {
                                                             return (
                                                                 <tr key={data.InstanceId}>
                                                                     <td>{data.InstanceId}</td>
@@ -74,16 +74,16 @@ const instances = ({instances}) => {
 
 export async function getStaticProps(context) {
     const res = await api.get('/autoscaling/instances')
-    const instances = await res.data
+    const items = await res.data
 
-    if (!instances) {
+    if (!items) {
         return {
             notFound: true,
         }
     }
 
     return {
-        props: { instances },
+        props: { items },
         revalidate: 10,
     }
 }

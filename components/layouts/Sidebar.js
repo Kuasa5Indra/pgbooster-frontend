@@ -41,11 +41,15 @@ function Sidebar() {
                             </li>
                         </ul>
                     </li>
-                    <li className="dropdown">
+                    <li className={router.pathname == "/loadbalancing" ||  router.pathname == "/loadbalancing/groups" ? "dropdown active" : ""}>
                         <a href="" className="nav-link has-dropdown"><i className="fas fa-balance-scale"></i><span>Load Balancing</span></a>
                         <ul className="dropdown-menu">
-                            <li><a className="nav-link">Load Balancer</a></li>
-                            <li><a className="nav-link">Target Groups</a></li>
+                            <li className={router.pathname == "/loadbalancing" ? "active" : ""}>
+                                <Link href="/loadbalancing"><a className="nav-link">Load Balancers</a></Link>
+                            </li>
+                            <li className={router.pathname == "/loadbalancing/groups" ? "active" : ""}>
+                                <Link href="/loadbalancing/groups"><a className="nav-link">Target Groups</a></Link>
+                            </li>
                         </ul>
                     </li>
                     <li className="menu-header">Infrastructure</li>

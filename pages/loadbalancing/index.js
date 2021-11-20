@@ -1,36 +1,36 @@
-import Head from "next/head";
+import Head from 'next/head';
+import Layout from '../../components/layouts/Layout';
 import Link from 'next/link';
-import Layout from "../../components/layouts/Layout";
+import api from '../../utils/api';
 import dateFormat from "dateformat";
-import api from "../../utils/api";
 
-const groups = ({ items }) => {
+const index = ({ loadbalancer }) => {
     return (
         <>
             <Head>
-                <title>Autoscaling Groups &mdash; PgBooster</title>
+                <title>Load Balancing &mdash; PgBooster</title>
             </Head>
             <Layout>
                 <div className="main-content">
                     <section className="section">
                         <div className="section-header">
-                            <h1>Auto Scaling</h1>
+                            <h1>Load Balancing</h1>
                             <div className="section-header-breadcrumb">
                                 <div className="breadcrumb-item active"><Link href="/dashboard"><a>Dashboard</a></Link></div>
-                                <div className="breadcrumb-item">Autoscaling Groups</div>
+                                <div className="breadcrumb-item">Load Balancers</div>
                             </div>
                         </div>
 
                         <div className="section-body">
-                            <h2 className="section-title">Autoscaling Groups</h2>
+                            <h2 className="section-title">Load Balancers</h2>
                             <p className="section-lead">
-                                This is the list of autoscaling groups
+                                This is the list of load balancers
                             </p>
                             <div className="row">
                                 <div className="col-md-12 col-sm-6 col-lg-12">
                                     <div className="card">
                                         <div className="card-header">
-                                            <h4>Groups</h4>
+                                            <h4>Load Balancers</h4>
                                         </div>
                                         <div className="card-body">
                                             <div className="table-responsive">
@@ -38,22 +38,24 @@ const groups = ({ items }) => {
                                                     <thead>
                                                         <tr>
                                                             <th>Name</th>
-                                                            <th>Min Capacity</th>
-                                                            <th>Desired Capacity</th>
-                                                            <th>Max Capacity</th>
-                                                            <th>Availability Zone</th>
+                                                            <th>DNS Name</th>
+                                                            <th>Status</th>
+                                                            <th>Type</th>
+                                                            <th>VPC ID</th>
+                                                            <th>Availability Zones</th>
                                                             <th>Created at</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        { items.data.map((data) => {
+                                                        {loadbalancer.data.map((data) => {
                                                             return (
-                                                                <tr key={data.AutoScalingGroupARN}>
-                                                                    <td>{data.AutoScalingGroupName}</td>
-                                                                    <td>{data.MinSize}</td>
-                                                                    <td>{data.DesiredCapacity}</td>
-                                                                    <td>{data.MaxSize}</td>
-                                                                    <td>{data.AvailabilityZones.toString()}</td>
+                                                                <tr key={data.LoadBalancerArn}>
+                                                                    <td>{data.LoadBalancerName}</td>
+                                                                    <td>{data.DNSName}</td>
+                                                                    <td>{data.State.Code}</td>
+                                                                    <td>{data.Type}</td>
+                                                                    <td>{data.VpcId}</td>
+                                                                    <td>{data.AvailabilityZones.map(({ ZoneName }) => ZoneName).toString()}</td>
                                                                     <td>{dateFormat(data.CreatedTime, "dd/mm/yyyy HH:MM:ss")}</td>
                                                                 </tr>
                                                             )
@@ -74,19 +76,19 @@ const groups = ({ items }) => {
 }
 
 export async function getStaticProps(context) {
-    const res = await api.get('/autoscaling/groups')
-    const items = await res.data
+    const res = await api.get('/loadbalancing')
+    const loadbalancer = await res.data
 
-    if (!items) {
+    if (!loadbalancer) {
         return {
             notFound: true,
-        }
+        };
     }
 
     return {
-        props: { items },
-        revalidate: 10,
-    }
+        props: { loadbalancer },
+        revalidate: 10
+    };
 }
 
-export default groups;
+export default index;
