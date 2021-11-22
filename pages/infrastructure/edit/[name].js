@@ -5,6 +5,7 @@ import api from "../../../utils/api";
 import { useState } from "react";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
+import { Card, Col, Row, Form, Button } from "react-bootstrap";
 
 function edit() {
     const router = useRouter();
@@ -19,8 +20,8 @@ function edit() {
         const name = e.target.name;
         const value = e.target.value;
         setQuery((prevState) => ({
-          ...prevState,
-          [name]: value
+            ...prevState,
+            [name]: value
         }));
     };
 
@@ -50,12 +51,12 @@ function edit() {
                 title: response.data.status,
                 text: response.data.message,
                 icon: "success",
-            }).then(function() {
+            }).then(function () {
                 router.push('/infrastructure');
             });
         }).catch((error) => {
             var errorData = error.response.data.errors;
-            var errorMessages = errorData.map(({msg}) => msg)
+            var errorMessages = errorData.map(({ msg }) => msg)
             swal({
                 title: "Error",
                 text: errorMessages.toString(),
@@ -87,27 +88,59 @@ function edit() {
                         <div className="section-body">
                             <h2 className="section-title">Update your code</h2>
                             <p className="section-lead">Update your infrastructure by updating your code</p>
-                            <div className="row">
+                            <Row>
+                                <Col sm={6} md={12} lg={12}>
+                                    <Card>
+                                        <Form onSubmit={formSubmit} encType="multipart/form-data">
+                                            <Card.Body>
+                                                <Form.Group>
+                                                    <Form.Label>Stack Name</Form.Label>
+                                                    <Form.Control
+                                                        name="stackname"
+                                                        placeholder="example-stack"
+                                                        value={name}
+                                                        onChange={handleParam()}
+                                                        disabled
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Label>JSON / YAML code</Form.Label>
+                                                    <Form.File
+                                                        name="code"
+                                                        className="form-control-file"
+                                                        accept=".json, .yaml, .yml"
+                                                        onChange={handleFileChange()}
+                                                    />
+                                                </Form.Group>
+                                            </Card.Body>
+                                            <Card.Footer>
+                                                <Button type="submit">Submit</Button>
+                                            </Card.Footer>
+                                        </Form>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            {/* <div className="row">
                                 <div className="col-md-12 col-sm-6 col-lg-12">
                                     <div className="card">
                                         <form onSubmit={formSubmit} encType="multipart/form-data">
                                             <div className="card-body">
                                                 <div className="form-group">
                                                     <label>Stack Name</label>
-                                                    <input type="text" 
-                                                    className="form-control" 
-                                                    name="stackname" 
-                                                    placeholder="example-stack"
-                                                    value={name}
-                                                    onChange={handleParam()} disabled />
+                                                    <input type="text"
+                                                        className="form-control"
+                                                        name="stackname"
+                                                        placeholder="example-stack"
+                                                        value={name}
+                                                        onChange={handleParam()} disabled />
                                                 </div>
                                                 <div className="form-group">
                                                     <label>JSON / YAML code</label>
-                                                    <input type="file" 
-                                                    className="form-control-file" 
-                                                    name="code"
-                                                    accept = ".json, .yaml, .yml"
-                                                    onChange={handleFileChange()} />
+                                                    <input type="file"
+                                                        className="form-control-file"
+                                                        name="code"
+                                                        accept=".json, .yaml, .yml"
+                                                        onChange={handleFileChange()} />
                                                 </div>
                                             </div>
                                             <div className="card-footer text-left">
@@ -116,7 +149,7 @@ function edit() {
                                         </form>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </section>
                 </div>

@@ -1,5 +1,6 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import Head from 'next/head';
+import Image from 'next/image';
+import { Row, Col, Card, Form, Container, Button } from 'react-bootstrap';
 
 export default function Home() {
   return (
@@ -7,69 +8,62 @@ export default function Home() {
       <Head>
         <title>Login &mdash; PgBooster</title>
       </Head>
-      <div id="app">
-        <section className="section">
-        <div className="container mt-5">
-          <div className="row">
-            <div className="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
+      <section className="section">
+        <Container className="mt-5">
+          <Row>
+            <Col sm={{ span: 8, offset: 2 }} md={{ span: 6, offset: 3 }} lg={{ span: 6, offset: 3 }} xl={{ span: 4, offset: 4 }} className="col-12">
               <div className="login-brand">
                 <Image src="/assets/img/stisla-fill.svg" alt="logo" width={100} height={100} className="shadow-light rounded-circle" />
               </div>
 
-              <div className="card card-primary">
-                <div className="card-header"><h4>Login</h4></div>
-
-                <div className="card-body">
-                  <form method="POST" action="#" className="needs-validation" noValidate="">
-                    <div className="form-group">
-                      <label htmlFor="email">Email</label>
-                      <input id="email" type="email" className="form-control" name="email" tabIndex="1" required autoFocus />
-                      <div className="invalid-feedback">
-                        Please fill in your email
-                      </div>
-                    </div>
-
-                    <div className="form-group">
+              <Card className="card-primary">
+                <Card.Header><h4>Login</h4></Card.Header>
+                <Card.Body>
+                  <Form>
+                    <Form.Group>
+                      <Form.Label>Email</Form.Label>
+                      <Form.Control
+                        type="email"
+                        name="email"
+                      />
+                    </Form.Group>
+                    <Form.Group>
                       <div className="d-block">
-                        <label htmlFor="password" className="control-label">Password</label>
+                        <Form.Label className="control-label">Password</Form.Label>
                         <div className="float-right">
                           <a href="auth-forgot-password.html" className="text-small">
                             Forgot Password?
                           </a>
                         </div>
                       </div>
-                      <input id="password" type="password" className="form-control" name="password" tabIndex="2" required />
-                      <div className="invalid-feedback">
-                        please fill in your password
-                      </div>
-                    </div>
-
-                    <div className="form-group">
-                      <div className="custom-control custom-checkbox">
-                        <input type="checkbox" name="remember" className="custom-control-input" tabIndex="3" id="remember-me" />
-                        <label className="custom-control-label" htmlFor="remember-me">Remember Me</label>
-                      </div>
-                    </div>
-
-                    <div className="form-group">
-                      <button type="submit" className="btn btn-primary btn-lg btn-block" tabIndex="4">
-                        Login
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
+                      <Form.Control
+                        type="password"
+                        name="password"
+                      />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Check
+                        custom
+                        type="checkbox"
+                        label="Remember Me"
+                      />
+                    </Form.Group>
+                    <Form.Group>
+                      <Button type="submit" size="lg" block>Login</Button>
+                    </Form.Group>
+                  </Form>
+                </Card.Body>
+              </Card>
               <div className="mt-5 text-muted text-center">
                 Don't have an account? <a href="auth-register.html">Create One</a>
               </div>
               <div className="simple-footer">
                 Copyright &copy; PgBooster 2021
               </div>
-            </div>
-          </div>
-        </div>
-        </section>
-      </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
     </>
   )
 }

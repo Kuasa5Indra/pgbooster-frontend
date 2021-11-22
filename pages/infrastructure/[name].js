@@ -3,7 +3,8 @@ import Layout from "../../components/layouts/Layout";
 import Link from "next/link";
 import dateFormat from "dateformat";
 import api from "../../utils/api";
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import { Card, Table, Row, Col } from "react-bootstrap";
 
 function show({ stack }) {
     const router = useRouter();
@@ -28,28 +29,23 @@ function show({ stack }) {
 
                         <div className="section-body">
                             <h2 className="section-title">{name}</h2>
-                            <div className="row">
-                                <div className="col-sm-6 col-md-12 col-lg-12">
-                                    <div className="card">
-                                        <div className="card-header">
-                                            <h4>Stack Information</h4>
-                                        </div>
-                                        <div className="card-body">
+                            <Row>
+                                <Col sm={6} md={12} lg={12}>
+                                    <Card>
+                                        <Card.Header><h4>Stack Information</h4></Card.Header>
+                                        <Card.Body>
                                             <b>Stack Id</b> <p>{stack[0].StackId}</p>
                                             <b>Stack Name</b> <p>{stack[0].StackName}</p>
                                             <b>Stack Creation</b> <p>{dateFormat(stack[0].CreationTime, "dd/mm/yyyy HH:MM:ss")}</p>
                                             <b>Stack Status</b> <p>{stack[0].StackStatus}</p>
-                                            <b>Disable Rollback</b> 
+                                            <b>Disable Rollback</b>
                                             <p>{stack[0].DisableRollback ? "true" : "false"}</p>
-                                            <b>Enable Termination Protection</b> 
+                                            <b>Enable Termination Protection</b>
                                             <p>{stack[0].EnableTerminationProtection ? "true" : "false"}</p>
-                                        </div>
-                                        <div className="card-footer">
-                                            Footer Card
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
                         </div>
                     </section>
                 </div>

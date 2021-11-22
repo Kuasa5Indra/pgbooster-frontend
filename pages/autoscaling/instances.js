@@ -2,8 +2,9 @@ import Head from "next/head";
 import Link from 'next/link';
 import Layout from "../../components/layouts/Layout";
 import api from "../../utils/api";
+import { Card, Table, Row, Col } from "react-bootstrap";
 
-const instances = ({items}) => {
+const instances = ({ items }) => {
     return (
         <>
             <Head>
@@ -25,45 +26,41 @@ const instances = ({items}) => {
                             <p className="section-lead">
                                 This is the list of running autoscaling instances
                             </p>
-                            <div className="row">
-                                <div className="col-md-12 col-sm-6 col-lg-12">
-                                    <div className="card">
-                                        <div className="card-header">
-                                            <h4>Instances</h4>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="table-responsive">
-                                                <table className="table table-bordered table-md">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Type</th>
-                                                            <th>Auto Scaling Group Name</th>
-                                                            <th>Availability Zone</th>
-                                                            <th>Lifecycle State</th>
-                                                            <th>Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {items.data.map((data) => {
-                                                            return (
-                                                                <tr key={data.InstanceId}>
-                                                                    <td>{data.InstanceId}</td>
-                                                                    <td>{data.InstanceType}</td>
-                                                                    <td>{data.AutoScalingGroupName}</td>
-                                                                    <td>{data.AvailabilityZone}</td>
-                                                                    <td>{data.LifecycleState}</td>
-                                                                    <td>{data.HealthStatus}</td>
-                                                                </tr>
-                                                            )
-                                                        })}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <Row>
+                                <Col sm={6} md={12} lg={12}>
+                                    <Card>
+                                        <Card.Header><h4>Instances</h4></Card.Header>
+                                        <Card.Body>
+                                            <Table responsive="md" bordered>
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Type</th>
+                                                        <th>Auto Scaling Group Name</th>
+                                                        <th>Availability Zone</th>
+                                                        <th>Lifecycle State</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {items.data.map((data) => {
+                                                        return (
+                                                            <tr key={data.InstanceId}>
+                                                                <td>{data.InstanceId}</td>
+                                                                <td>{data.InstanceType}</td>
+                                                                <td>{data.AutoScalingGroupName}</td>
+                                                                <td>{data.AvailabilityZone}</td>
+                                                                <td>{data.LifecycleState}</td>
+                                                                <td>{data.HealthStatus}</td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </Table>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
                         </div>
                     </section>
                 </div>

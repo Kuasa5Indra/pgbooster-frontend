@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Layout from "../../components/layouts/Layout";
 import dateFormat from "dateformat";
 import api from "../../utils/api";
+import { Card, Table, Row, Col } from "react-bootstrap";
 
 const groups = ({ items }) => {
     return (
@@ -26,45 +27,42 @@ const groups = ({ items }) => {
                             <p className="section-lead">
                                 This is the list of autoscaling groups
                             </p>
-                            <div className="row">
-                                <div className="col-md-12 col-sm-6 col-lg-12">
-                                    <div className="card">
-                                        <div className="card-header">
-                                            <h4>Groups</h4>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="table-responsive">
-                                                <table className="table table-bordered table-md">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Min Capacity</th>
-                                                            <th>Desired Capacity</th>
-                                                            <th>Max Capacity</th>
-                                                            <th>Availability Zone</th>
-                                                            <th>Created at</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        { items.data.map((data) => {
-                                                            return (
-                                                                <tr key={data.AutoScalingGroupARN}>
-                                                                    <td>{data.AutoScalingGroupName}</td>
-                                                                    <td>{data.MinSize}</td>
-                                                                    <td>{data.DesiredCapacity}</td>
-                                                                    <td>{data.MaxSize}</td>
-                                                                    <td>{data.AvailabilityZones.toString()}</td>
-                                                                    <td>{dateFormat(data.CreatedTime, "dd/mm/yyyy HH:MM:ss")}</td>
-                                                                </tr>
-                                                            )
-                                                        })}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+                            <Row>
+                                <Col sm={6} md={12} lg={12}>
+                                    <Card>
+                                        <Card.Header><h4>Groups</h4></Card.Header>
+                                        <Card.Body>
+                                            <Table responsive="md" bordered>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Min Capacity</th>
+                                                        <th>Desired Capacity</th>
+                                                        <th>Max Capacity</th>
+                                                        <th>Availability Zone</th>
+                                                        <th>Created at</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {items.data.map((data) => {
+                                                        return (
+                                                            <tr key={data.AutoScalingGroupARN}>
+                                                                <td>{data.AutoScalingGroupName}</td>
+                                                                <td>{data.MinSize}</td>
+                                                                <td>{data.DesiredCapacity}</td>
+                                                                <td>{data.MaxSize}</td>
+                                                                <td>{data.AvailabilityZones.toString()}</td>
+                                                                <td>{dateFormat(data.CreatedTime, "dd/mm/yyyy HH:MM:ss")}</td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </Table>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
                         </div>
                     </section>
                 </div>

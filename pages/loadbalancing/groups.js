@@ -2,8 +2,9 @@ import Head from 'next/head';
 import Layout from '../../components/layouts/Layout';
 import Link from 'next/link';
 import api from '../../utils/api';
+import { Card, Table, Row, Col } from "react-bootstrap";
 
-const groups = ({targets}) => {
+const groups = ({ targets }) => {
     return (
         <>
             <Head>
@@ -25,45 +26,42 @@ const groups = ({targets}) => {
                             <p className="section-lead">
                                 This is the list of target groups
                             </p>
-                            <div className="row">
-                                <div className="col-md-12 col-sm-6 col-lg-12">
-                                    <div className="card">
-                                        <div className="card-header">
-                                            <h4>Target Groups</h4>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="table-responsive">
-                                                <table className="table table-bordered table-md">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Protocol</th>
-                                                            <th>Port</th>
-                                                            <th>IP Address Type</th>
-                                                            <th>Target Type</th>
-                                                            <th>VPC ID</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        { targets.data.map((data) => {
-                                                            return (
-                                                                <tr key={data.TargetGroupArn}>
-                                                                   <td>{data.TargetGroupName}</td>
-                                                                   <td>{data.Protocol}</td>
-                                                                   <td>{data.Port}</td>
-                                                                   <td>{data.IpAddressType}</td>
-                                                                   <td>{data.TargetType}</td>
-                                                                   <td>{data.VpcId}</td> 
-                                                                </tr>
-                                                            )
-                                                        }) }
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+                            <Row>
+                                <Col sm={6} md={12} lg={12}>
+                                    <Card>
+                                        <Card.Header><h4>Target Groups</h4></Card.Header>
+                                        <Card.Body>
+                                            <Table responsive="md" bordered>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Protocol</th>
+                                                        <th>Port</th>
+                                                        <th>IP Address Type</th>
+                                                        <th>Target Type</th>
+                                                        <th>VPC ID</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {targets.data.map((data) => {
+                                                        return (
+                                                            <tr key={data.TargetGroupArn}>
+                                                                <td>{data.TargetGroupName}</td>
+                                                                <td>{data.Protocol}</td>
+                                                                <td>{data.Port}</td>
+                                                                <td>{data.IpAddressType}</td>
+                                                                <td>{data.TargetType}</td>
+                                                                <td>{data.VpcId}</td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </Table>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
                         </div>
                     </section>
                 </div>
@@ -75,15 +73,15 @@ const groups = ({targets}) => {
 export async function getStaticProps(context) {
     const res = await api.get('/loadbalancing/groups');
     const targets = await res.data;
-    
-    if(!targets){
+
+    if (!targets) {
         return {
             notFound: true
         };
     }
 
     return {
-        props: {targets},
+        props: { targets },
         revalidate: 10,
     };
 }
