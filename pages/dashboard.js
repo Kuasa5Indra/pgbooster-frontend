@@ -2,7 +2,7 @@ import Head from "next/head";
 import Layout from "../components/layouts/Layout";
 import { Hero } from "../components/interface";
 
-export default function dashboard() {
+const DashboardPage = () => {
     return (
         <>
             <Head>
@@ -28,3 +28,5 @@ export default function dashboard() {
         </>
     );
 };
+
+export default DashboardPage;

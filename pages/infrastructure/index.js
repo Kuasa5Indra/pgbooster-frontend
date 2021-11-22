@@ -7,10 +7,10 @@ import api from "../../utils/api";
 import swal from "sweetalert";
 import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
 
-function infrastructure({ stacks }) {
+const InfrastructurePage = ({ stacks }) => {
     const router = useRouter();
 
-    async function deleteStack(name) {
+    const deleteStack = async(name) => {
         swal({
             title: "Are you sure ?",
             text: "Once its deleted, you will not able to restore your stack",
@@ -131,4 +131,4 @@ export async function getStaticProps(context) {
     }
 }
 
-export default infrastructure;
+export default InfrastructurePage;

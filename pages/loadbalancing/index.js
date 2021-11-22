@@ -5,7 +5,7 @@ import api from '../../utils/api';
 import dateFormat from "dateformat";
 import { Card, Table, Row, Col } from "react-bootstrap";
 
-const index = ({ loadbalancer }) => {
+const LoadBalancerPage = ({ loadbalancer }) => {
     return (
         <>
             <Head>
@@ -89,4 +89,4 @@ export async function getStaticProps(context) {
     };
 }
 
-export default index;
+export default LoadBalancerPage;

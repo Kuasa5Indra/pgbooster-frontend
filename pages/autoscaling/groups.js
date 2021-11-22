@@ -5,7 +5,7 @@ import dateFormat from "dateformat";
 import api from "../../utils/api";
 import { Card, Table, Row, Col } from "react-bootstrap";
 
-const groups = ({ items }) => {
+const AutoScalingGroupsPage = ({ items }) => {
     return (
         <>
             <Head>
@@ -87,4 +87,4 @@ export async function getStaticProps(context) {
     }
 }
 
-export default groups;
+export default AutoScalingGroupsPage;

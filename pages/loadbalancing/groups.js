@@ -4,7 +4,7 @@ import Link from 'next/link';
 import api from '../../utils/api';
 import { Card, Table, Row, Col } from "react-bootstrap";
 
-const groups = ({ targets }) => {
+const TargetGroupsPage = ({ targets }) => {
     return (
         <>
             <Head>
@@ -86,4 +86,4 @@ export async function getStaticProps(context) {
     };
 }
 
-export default groups;
+export default TargetGroupsPage;

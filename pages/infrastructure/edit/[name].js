@@ -7,7 +7,7 @@ import swal from "sweetalert";
 import { useRouter } from "next/router";
 import { Card, Col, Row, Form, Button } from "react-bootstrap";
 
-function edit() {
+const EditStackPage = () => {
     const router = useRouter();
     const { name } = router.query;
 
@@ -120,36 +120,6 @@ function edit() {
                                     </Card>
                                 </Col>
                             </Row>
-                            {/* <div className="row">
-                                <div className="col-md-12 col-sm-6 col-lg-12">
-                                    <div className="card">
-                                        <form onSubmit={formSubmit} encType="multipart/form-data">
-                                            <div className="card-body">
-                                                <div className="form-group">
-                                                    <label>Stack Name</label>
-                                                    <input type="text"
-                                                        className="form-control"
-                                                        name="stackname"
-                                                        placeholder="example-stack"
-                                                        value={name}
-                                                        onChange={handleParam()} disabled />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>JSON / YAML code</label>
-                                                    <input type="file"
-                                                        className="form-control-file"
-                                                        name="code"
-                                                        accept=".json, .yaml, .yml"
-                                                        onChange={handleFileChange()} />
-                                                </div>
-                                            </div>
-                                            <div className="card-footer text-left">
-                                                <button className="btn btn-primary">Submit</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div> */}
                         </div>
                     </section>
                 </div>
@@ -158,4 +128,4 @@ function edit() {
     );
 }
 
-export default edit;
+export default EditStackPage;

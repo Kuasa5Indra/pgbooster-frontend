@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import api from "../../utils/api";
 import { Card, Col, Row, Form, Button } from "react-bootstrap";
 
-function create() {
+const CreateStackPage = () => {
     const router = useRouter();
 
     const [query, setQuery] = useState({
@@ -127,4 +127,4 @@ function create() {
     );
 }
 
-export default create;
+export default CreateStackPage;

@@ -6,10 +6,10 @@ import swal from "sweetalert";
 import { useRouter } from "next/router";
 import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
 
-function server({ instances }) {
+const ServerPage = ({ instances }) => {
     const router = useRouter();
 
-    async function startInstance(id) {
+    const startInstance = async(id) => {
         const res = await api.get("/instances/" + id + "/start")
         const instance = await res.data
         swal({
@@ -21,7 +21,7 @@ function server({ instances }) {
         });
     };
 
-    async function stopInstance(id) {
+    const stopInstance = async(id) => {
         swal({
             title: "Are you sure ?",
             text: "Once its stopped, you can still start your instance again",
@@ -44,7 +44,7 @@ function server({ instances }) {
             });
     };
 
-    async function rebootInstance(id) {
+    const rebootInstance = async(id) => {
         const res = await api.get("/instances/" + id + "/reboot")
         const instance = await res.data
         swal({
@@ -56,7 +56,7 @@ function server({ instances }) {
         });
     };
 
-    async function terminateInstance(id) {
+    const terminateInstance = async(id) => {
         swal({
             title: "Are you sure ?",
             text: "Once its terminated, you will not able to restore your instance",
@@ -177,4 +177,4 @@ export async function getStaticProps(context) {
     }
 }
 
-export default server;
+export default ServerPage;

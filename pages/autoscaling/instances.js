@@ -4,7 +4,7 @@ import Layout from "../../components/layouts/Layout";
 import api from "../../utils/api";
 import { Card, Table, Row, Col } from "react-bootstrap";
 
-const instances = ({ items }) => {
+const AutoScalingInstancesPage = ({ items }) => {
     return (
         <>
             <Head>
@@ -85,4 +85,4 @@ export async function getStaticProps(context) {
     }
 }
 
-export default instances;
+export default AutoScalingInstancesPage;

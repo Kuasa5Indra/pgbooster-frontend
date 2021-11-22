@@ -6,7 +6,7 @@ import api from "../../utils/api";
 import { useRouter } from 'next/router';
 import { Card, Table, Row, Col } from "react-bootstrap";
 
-function show({ stack }) {
+const ShowStackPage = ({ stack }) => {
     const router = useRouter();
     const { name } = router.query;
 
@@ -71,4 +71,4 @@ export async function getStaticProps({ params }) {
     return { props: { stack } }
 }
 
-export default show;
+export default ShowStackPage;
