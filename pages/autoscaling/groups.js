@@ -5,6 +5,7 @@ import api from "../../utils/api";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Table, Row, Col } from "react-bootstrap";
+import { EmptyState } from "../../components/interface";
 
 const AutoScalingGroupsPage = ({ items }) => {
     return (
@@ -26,32 +27,36 @@ const AutoScalingGroupsPage = ({ items }) => {
                                 <Card>
                                     <Card.Header><h4>Groups</h4></Card.Header>
                                     <Card.Body>
-                                        <Table responsive="md" bordered>
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Min Capacity</th>
-                                                    <th>Desired Capacity</th>
-                                                    <th>Max Capacity</th>
-                                                    <th>Availability Zone</th>
-                                                    <th>Created at</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {items.data.map((data) => {
-                                                    return (
-                                                        <tr key={data.AutoScalingGroupARN}>
-                                                            <td>{data.AutoScalingGroupName}</td>
-                                                            <td>{data.MinSize}</td>
-                                                            <td>{data.DesiredCapacity}</td>
-                                                            <td>{data.MaxSize}</td>
-                                                            <td>{data.AvailabilityZones.toString()}</td>
-                                                            <td>{dateFormat(data.CreatedTime, "dd/mm/yyyy HH:MM:ss")}</td>
-                                                        </tr>
-                                                    )
-                                                })}
-                                            </tbody>
-                                        </Table>
+                                        {items.data.length > 0 ? (
+                                            <Table responsive="md" bordered>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Min Capacity</th>
+                                                        <th>Desired Capacity</th>
+                                                        <th>Max Capacity</th>
+                                                        <th>Availability Zone</th>
+                                                        <th>Created at</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {items.data.map((data) => {
+                                                        return (
+                                                            <tr key={data.AutoScalingGroupARN}>
+                                                                <td>{data.AutoScalingGroupName}</td>
+                                                                <td>{data.MinSize}</td>
+                                                                <td>{data.DesiredCapacity}</td>
+                                                                <td>{data.MaxSize}</td>
+                                                                <td>{data.AvailabilityZones.toString()}</td>
+                                                                <td>{dateFormat(data.CreatedTime, "dd/mm/yyyy HH:MM:ss")}</td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </Table>
+                                        ) : (
+                                            <EmptyState />
+                                        )}
                                     </Card.Body>
                                 </Card>
                             </Col>

@@ -5,6 +5,7 @@ import dateFormat from "dateformat";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Table, Row, Col } from "react-bootstrap";
+import { EmptyState } from "../../components/interface";
 
 const LoadBalancerPage = ({ loadbalancer }) => {
     return (
@@ -26,34 +27,38 @@ const LoadBalancerPage = ({ loadbalancer }) => {
                                 <Card>
                                     <Card.Header><h4>Load Balancers</h4></Card.Header>
                                     <Card.Body>
-                                        <Table responsive="md" bordered>
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>DNS Name</th>
-                                                    <th>Status</th>
-                                                    <th>Type</th>
-                                                    <th>VPC ID</th>
-                                                    <th>Availability Zones</th>
-                                                    <th>Created at</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {loadbalancer.data.map((data) => {
-                                                    return (
-                                                        <tr key={data.LoadBalancerArn}>
-                                                            <td>{data.LoadBalancerName}</td>
-                                                            <td>{data.DNSName}</td>
-                                                            <td>{data.State.Code}</td>
-                                                            <td>{data.Type}</td>
-                                                            <td>{data.VpcId}</td>
-                                                            <td>{data.AvailabilityZones.map(({ ZoneName }) => ZoneName).toString()}</td>
-                                                            <td>{dateFormat(data.CreatedTime, "dd/mm/yyyy HH:MM:ss")}</td>
-                                                        </tr>
-                                                    )
-                                                })}
-                                            </tbody>
-                                        </Table>
+                                        {loadbalancer.data.length > 0 ? (
+                                            <Table responsive="md" bordered>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>DNS Name</th>
+                                                        <th>Status</th>
+                                                        <th>Type</th>
+                                                        <th>VPC ID</th>
+                                                        <th>Availability Zones</th>
+                                                        <th>Created at</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {loadbalancer.data.map((data) => {
+                                                        return (
+                                                            <tr key={data.LoadBalancerArn}>
+                                                                <td>{data.LoadBalancerName}</td>
+                                                                <td>{data.DNSName}</td>
+                                                                <td>{data.State.Code}</td>
+                                                                <td>{data.Type}</td>
+                                                                <td>{data.VpcId}</td>
+                                                                <td>{data.AvailabilityZones.map(({ ZoneName }) => ZoneName).toString()}</td>
+                                                                <td>{dateFormat(data.CreatedTime, "dd/mm/yyyy HH:MM:ss")}</td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </Table>
+                                        ) : (
+                                            <EmptyState />
+                                        )}
                                     </Card.Body>
                                 </Card>
                             </Col>

@@ -7,6 +7,7 @@ import swal from "sweetalert";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
+import { EmptyState } from "../../components/interface";
 
 const InfrastructurePage = ({ stacks }) => {
     const router = useRouter();
@@ -56,46 +57,56 @@ const InfrastructurePage = ({ stacks }) => {
                                 <Card>
                                     <Card.Header><h4>Instances</h4></Card.Header>
                                     <Card.Body>
-                                        <Button onClick={() => router.push('/infrastructure/create')} className="float-left">
-                                            Upload Code
-                                        </Button>
-                                        <br /><br />
-                                        <Table responsive="md" bordered>
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Name</th>
-                                                    <th>Status</th>
-                                                    <th>Created at</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {stacks.data.map((data, index) => {
-                                                    return (
-                                                        <tr key={data.StackId}>
-                                                            <td>{index + 1}</td>
-                                                            <td>{data.StackName}</td>
-                                                            <td>{data.StackStatus}</td>
-                                                            <td>{dateFormat(data.CreationTime, "dd/mm/yyyy HH:MM:ss")}</td>
-                                                            <td>
-                                                                <ButtonGroup aria-label="Button Operation">
-                                                                    <Button variant="info" onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName } })}>
-                                                                        <i className="fas fa-info-circle"></i> Info
-                                                                    </Button>
-                                                                    <Button variant="warning" onClick={() => router.push({ pathname: '/infrastructure/edit/[name]', query: { name: data.StackName } })}>
-                                                                        <i className="fas fa-edit"></i> Update
-                                                                    </Button>
-                                                                    <Button variant="danger" onClick={() => deleteStack(data.StackName)}>
-                                                                        <i className="fas fa-trash"></i> Delete
-                                                                    </Button>
-                                                                </ButtonGroup>
-                                                            </td>
+                                        {stacks.data.length > 0 ? (
+                                            <>
+                                                <Button onClick={() => router.push('/infrastructure/create')} className="float-left">
+                                                    Upload Code
+                                                </Button>
+                                                <br /><br />
+                                                <Table responsive="md" bordered>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Name</th>
+                                                            <th>Status</th>
+                                                            <th>Created at</th>
+                                                            <th>Action</th>
                                                         </tr>
-                                                    );
-                                                })}
-                                            </tbody>
-                                        </Table>
+                                                    </thead>
+                                                    <tbody>
+                                                        {stacks.data.map((data, index) => {
+                                                            return (
+                                                                <tr key={data.StackId}>
+                                                                    <td>{index + 1}</td>
+                                                                    <td>{data.StackName}</td>
+                                                                    <td>{data.StackStatus}</td>
+                                                                    <td>{dateFormat(data.CreationTime, "dd/mm/yyyy HH:MM:ss")}</td>
+                                                                    <td>
+                                                                        <ButtonGroup aria-label="Button Operation">
+                                                                            <Button variant="info" onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName } })}>
+                                                                                <i className="fas fa-info-circle"></i> Info
+                                                                            </Button>
+                                                                            <Button variant="warning" onClick={() => router.push({ pathname: '/infrastructure/edit/[name]', query: { name: data.StackName } })}>
+                                                                                <i className="fas fa-edit"></i> Update
+                                                                            </Button>
+                                                                            <Button variant="danger" onClick={() => deleteStack(data.StackName)}>
+                                                                                <i className="fas fa-trash"></i> Delete
+                                                                            </Button>
+                                                                        </ButtonGroup>
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                    </tbody>
+                                                </Table>
+                                            </>
+                                        ) : (
+                                            <EmptyState>
+                                                <Button onClick={() => router.push('/infrastructure/create')} className="float-left">
+                                                    Upload Code
+                                                </Button>
+                                            </EmptyState>
+                                        )}
                                     </Card.Body>
                                 </Card>
                             </Col>

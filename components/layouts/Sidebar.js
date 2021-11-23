@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ActiveNavLink, ActiveDropdownNavLink } from '../bootstrap/Link';
 import { useRouter } from 'next/router';
 
-function Sidebar() {
+const Sidebar = () => {
     const router = useRouter();
 
     return (

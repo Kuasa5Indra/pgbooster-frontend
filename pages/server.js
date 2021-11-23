@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { Section, SectionHeader, SectionBody } from "../components/bootstrap/Section";
 import { BreadcrumbHeader, BreadcrumbItem } from "../components/bootstrap/SectionBreadcrumb";
 import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
+import { EmptyState } from "../components/interface";
 
 const ServerPage = ({ instances }) => {
     const router = useRouter();
@@ -99,49 +100,51 @@ const ServerPage = ({ instances }) => {
                                 <Card>
                                     <Card.Header><h4>Instances</h4></Card.Header>
                                     <Card.Body>
-                                        <Table responsive="md" bordered>
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            {instances.data.map((data) => {
-                                                return (
-                                                    <tbody key={data.ReservationId}>
-                                                        {data.Instances.map((instance) => {
-                                                            return (
-                                                                <tr key={instance.InstanceId}>
-                                                                    <td>
-                                                                        {instance.InstanceId}
-                                                                    </td>
-                                                                    <td>{instance.Tags.find((tag) => tag.Key == "Name").Value}</td>
-                                                                    <td>{instance.State.Name}</td>
-                                                                    <td>
-                                                                        <ButtonGroup aria-label="Button Operation">
-                                                                            <Button variant="primary" onClick={() => startInstance(instance.InstanceId)}>
-                                                                                <i className="fas fa-play-circle"></i> Start
-                                                                            </Button>
-                                                                            <Button variant="warning" onClick={() => stopInstance(instance.InstanceId)}>
-                                                                                <i className="fas fa-stop-circle"></i> Stop
-                                                                            </Button>
-                                                                            <Button variant="dark" onClick={() => rebootInstance(instance.InstanceId)}>
-                                                                                <i className="fas fa-bolt"></i> Reboot
-                                                                            </Button>
-                                                                            <Button variant="danger" onClick={() => terminateInstance(instance.InstanceId)}>
-                                                                                <i className="fas fa-power-off"></i> Terminate
-                                                                            </Button>
-                                                                        </ButtonGroup>
-                                                                    </td>
-                                                                </tr>
-                                                            );
-                                                        })}
-                                                    </tbody>
-                                                );
-                                            })}
-                                        </Table>
+                                        {instances.data.length > 0 ? (
+                                            <Table responsive="lg" bordered>
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Name</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                {instances.data.map((data) => {
+                                                    return (
+                                                        <tbody key={data.ReservationId}>
+                                                            {data.Instances.map((instance) => {
+                                                                return (
+                                                                    <tr key={instance.InstanceId}>
+                                                                        <td>{instance.InstanceId}</td>
+                                                                        <td>{instance.Tags.find((tag) => tag.Key == "Name").Value}</td>
+                                                                        <td>{instance.State.Name}</td>
+                                                                        <td>
+                                                                            <ButtonGroup aria-label="Button Operation">
+                                                                                <Button variant="primary" onClick={() => startInstance(instance.InstanceId)}>
+                                                                                    <i className="fas fa-play-circle"></i> Start
+                                                                                </Button>
+                                                                                <Button variant="warning" onClick={() => stopInstance(instance.InstanceId)}>
+                                                                                    <i className="fas fa-stop-circle"></i> Stop
+                                                                                </Button>
+                                                                                <Button variant="dark" onClick={() => rebootInstance(instance.InstanceId)}>
+                                                                                    <i className="fas fa-bolt"></i> Reboot
+                                                                                </Button>
+                                                                                <Button variant="danger" onClick={() => terminateInstance(instance.InstanceId)}>
+                                                                                    <i className="fas fa-power-off"></i> Terminate
+                                                                                </Button>
+                                                                            </ButtonGroup>
+                                                                        </td>
+                                                                    </tr>
+                                                                );
+                                                            })}
+                                                        </tbody>
+                                                    );
+                                                })}
+                                            </Table>
+                                        ) : (
+                                            <EmptyState />
+                                        )}
                                     </Card.Body>
                                 </Card>
                             </Col>
