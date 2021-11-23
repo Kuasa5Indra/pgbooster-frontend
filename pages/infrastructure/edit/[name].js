@@ -1,10 +1,11 @@
 import Head from "next/head";
 import Layout from "../../../components/layouts/Layout";
-import Link from "next/link";
 import api from "../../../utils/api";
 import { useState } from "react";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
+import { Section, SectionHeader, SectionBody } from "../../../components/bootstrap/Section";
+import { BreadcrumbHeader, BreadcrumbItem } from "../../../components/bootstrap/SectionBreadcrumb";
 import { Card, Col, Row, Form, Button } from "react-bootstrap";
 
 const EditStackPage = () => {
@@ -74,55 +75,49 @@ const EditStackPage = () => {
                 <title>Update Code &mdash; PgBooster</title>
             </Head>
             <Layout>
-                <div className="main-content">
-                    <section className="section">
-                        <div className="section-header">
-                            <h1>Update Code</h1>
-                            <div className="section-header-breadcrumb">
-                                <div className="breadcrumb-item active"><Link href="/dashboard"><a>Dashboard</a></Link></div>
-                                <div className="breadcrumb-item active"><Link href="/infrastructure"><a>Code</a></Link></div>
-                                <div className="breadcrumb-item">Update Code</div>
-                            </div>
-                        </div>
-
-                        <div className="section-body">
-                            <h2 className="section-title">Update your code</h2>
-                            <p className="section-lead">Update your infrastructure by updating your code</p>
-                            <Row>
-                                <Col sm={6} md={12} lg={12}>
-                                    <Card>
-                                        <Form onSubmit={formSubmit} encType="multipart/form-data">
-                                            <Card.Body>
-                                                <Form.Group>
-                                                    <Form.Label>Stack Name</Form.Label>
-                                                    <Form.Control
-                                                        name="stackname"
-                                                        placeholder="example-stack"
-                                                        value={name}
-                                                        onChange={handleParam()}
-                                                        disabled
-                                                    />
-                                                </Form.Group>
-                                                <Form.Group>
-                                                    <Form.Label>JSON / YAML code</Form.Label>
-                                                    <Form.File
-                                                        name="code"
-                                                        className="form-control-file"
-                                                        accept=".json, .yaml, .yml"
-                                                        onChange={handleFileChange()}
-                                                    />
-                                                </Form.Group>
-                                            </Card.Body>
-                                            <Card.Footer>
-                                                <Button type="submit">Submit</Button>
-                                            </Card.Footer>
-                                        </Form>
-                                    </Card>
-                                </Col>
-                            </Row>
-                        </div>
-                    </section>
-                </div>
+                <Section>
+                    <SectionHeader title="Update Code">
+                        <BreadcrumbHeader>
+                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
+                            <BreadcrumbItem href="/infrastructure" text="Code" active />
+                            <BreadcrumbItem text="Update Code" />
+                        </BreadcrumbHeader>
+                    </SectionHeader>
+                    <SectionBody title="Update your code" lead="Update your infrastructure by updating your code">
+                        <Row>
+                            <Col sm={6} md={12} lg={12}>
+                                <Card>
+                                    <Form onSubmit={formSubmit} encType="multipart/form-data">
+                                        <Card.Body>
+                                            <Form.Group>
+                                                <Form.Label>Stack Name</Form.Label>
+                                                <Form.Control
+                                                    name="stackname"
+                                                    placeholder="example-stack"
+                                                    value={name}
+                                                    onChange={handleParam()}
+                                                    disabled
+                                                />
+                                            </Form.Group>
+                                            <Form.Group>
+                                                <Form.Label>JSON / YAML code</Form.Label>
+                                                <Form.File
+                                                    name="code"
+                                                    className="form-control-file"
+                                                    accept=".json, .yaml, .yml"
+                                                    onChange={handleFileChange()}
+                                                />
+                                            </Form.Group>
+                                        </Card.Body>
+                                        <Card.Footer>
+                                            <Button type="submit">Submit</Button>
+                                        </Card.Footer>
+                                    </Form>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </SectionBody>
+                </Section>
             </Layout>
         </>
     );

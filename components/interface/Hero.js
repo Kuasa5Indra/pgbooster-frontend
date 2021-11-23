@@ -1,4 +1,4 @@
-function Hero(props) {
+const Hero = (props) => {
     return (
         <div className={props.className}>
             <div className="hero-inner">

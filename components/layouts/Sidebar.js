@@ -30,7 +30,7 @@ function Sidebar() {
                             <a className="nav-link"><i className="fas fa-server"></i> <span>Server</span></a>
                         </Link>
                     </li>
-                    <li className={router.pathname == "/autoscaling/instances" ||  router.pathname == "/autoscaling/groups" ? "dropdown active" : ""}>
+                    <li className={router.pathname == "/autoscaling/instances" ||  router.pathname == "/autoscaling/groups" ? "nav-item dropdown active" : "nav-item dropdown"}>
                         <a href="" className="nav-link has-dropdown"><i className="fab fa-cloudscale"></i><span>Auto Scaling</span></a>
                         <ul className="dropdown-menu">
                             <li className={router.pathname == "/autoscaling/instances" ? "active" : ""}>
@@ -41,7 +41,7 @@ function Sidebar() {
                             </li>
                         </ul>
                     </li>
-                    <li className={router.pathname == "/loadbalancing" ||  router.pathname == "/loadbalancing/groups" ? "dropdown active" : ""}>
+                    <li className={router.pathname == "/loadbalancing" ||  router.pathname == "/loadbalancing/groups" ? "nav-item dropdown active" : "nav-item dropdown"}>
                         <a href="" className="nav-link has-dropdown"><i className="fas fa-balance-scale"></i><span>Load Balancing</span></a>
                         <ul className="dropdown-menu">
                             <li className={router.pathname == "/loadbalancing" ? "active" : ""}>

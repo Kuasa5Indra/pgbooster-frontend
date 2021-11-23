@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Layout from "../components/layouts/Layout";
 import { Hero } from "../components/interface";
+import { Section, SectionHeader, SectionBody } from "../components/bootstrap/Section";
 
 const DashboardPage = () => {
     return (
@@ -9,21 +10,16 @@ const DashboardPage = () => {
                 <title>Dashboard &mdash; PgBooster</title>
             </Head>
             <Layout>
-                <div className="main-content">
-                    <section className="section">
-                        <div className="section-header">
-                            <h1>Dashboard</h1>
-                        </div>
-
-                        <div className="section-body">
-                            <Hero 
-                                className="hero bg-primary text-white"
-                                title="Welcome Back, Admin" 
-                                lead="A Dashboard always tell you our system performances." 
-                            />
-                        </div>
-                    </section>
-                </div>
+                <Section>
+                    <SectionHeader title="Dashboard" />
+                    <SectionBody>
+                        <Hero
+                            className="hero bg-primary text-white"
+                            title="Welcome Back, Admin"
+                            lead="A Dashboard always tell you our system performances."
+                        />
+                    </SectionBody>
+                </Section>
             </Layout>
         </>
     );
