@@ -1,7 +1,8 @@
 import Link from 'next/link';
+import { ActiveNavLink, ActiveDropdownNavLink } from '../bootstrap/Link';
 import { useRouter } from 'next/router';
 
-function Sidebar() {
+const Sidebar = () => {
     const router = useRouter();
 
     return (
@@ -19,45 +20,33 @@ function Sidebar() {
                 </div>
                 <ul className="sidebar-menu">
                     <li className="menu-header">Dashboard</li>
-                    <li className={router.pathname == "/dashboard" ? "active" : ""}>
-                        <Link href="/dashboard">
-                            <a className="nav-link"><i className="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
-                        </Link>
-                    </li>
+                    <ActiveNavLink href="/dashboard">
+                        <a className="nav-link"><i className="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+                    </ActiveNavLink>
                     <li className="menu-header">Compute</li>
-                    <li className={router.pathname == "/server" ? "active" : ""}>
-                        <Link href="/server">
-                            <a className="nav-link"><i className="fas fa-server"></i> <span>Server</span></a>
-                        </Link>
-                    </li>
-                    <li className={router.pathname == "/autoscaling/instances" ||  router.pathname == "/autoscaling/groups" ? "dropdown active" : ""}>
-                        <a href="" className="nav-link has-dropdown"><i className="fab fa-cloudscale"></i><span>Auto Scaling</span></a>
-                        <ul className="dropdown-menu">
-                            <li className={router.pathname == "/autoscaling/instances" ? "active" : ""}>
-                                <Link href="/autoscaling/instances"><a className="nav-link">Instances</a></Link>
-                            </li>
-                            <li className={router.pathname == "/autoscaling/groups" ? "active" : ""}>
-                                <Link href="/autoscaling/groups"><a className="nav-link">Groups</a></Link>
-                            </li>
-                        </ul>
-                    </li>
-                    <li className={router.pathname == "/loadbalancing" ||  router.pathname == "/loadbalancing/groups" ? "dropdown active" : ""}>
-                        <a href="" className="nav-link has-dropdown"><i className="fas fa-balance-scale"></i><span>Load Balancing</span></a>
-                        <ul className="dropdown-menu">
-                            <li className={router.pathname == "/loadbalancing" ? "active" : ""}>
-                                <Link href="/loadbalancing"><a className="nav-link">Load Balancers</a></Link>
-                            </li>
-                            <li className={router.pathname == "/loadbalancing/groups" ? "active" : ""}>
-                                <Link href="/loadbalancing/groups"><a className="nav-link">Target Groups</a></Link>
-                            </li>
-                        </ul>
-                    </li>
+                    <ActiveNavLink href="/server">
+                        <a className="nav-link"><i className="fas fa-server"></i> <span>Server</span></a>
+                    </ActiveNavLink>
+                    <ActiveDropdownNavLink iconClassName="fab fa-cloudscale" title="Auto Scaling" routes={["/autoscaling/instances", "/autoscaling/groups"]}>
+                        <ActiveNavLink href="/autoscaling/instances">
+                            <a className="nav-link">Instances</a>
+                        </ActiveNavLink>
+                        <ActiveNavLink href="/autoscaling/groups">
+                            <a className="nav-link">Groups</a>
+                        </ActiveNavLink>
+                    </ActiveDropdownNavLink>
+                    <ActiveDropdownNavLink iconClassName="fas fa-balance-scale" title="Load Balancing" routes={["/loadbalancing", "/loadbalancing/groups"]}>
+                        <ActiveNavLink href="/loadbalancing">
+                            <a className="nav-link">Load Balancers</a>
+                        </ActiveNavLink>
+                        <ActiveNavLink href="/loadbalancing/groups">
+                            <a className="nav-link">Target Groups</a>
+                        </ActiveNavLink>
+                    </ActiveDropdownNavLink>
                     <li className="menu-header">Infrastructure</li>
-                    <li className={router.pathname == "/infrastructure" ? "active" : ""}>
-                        <Link href="/infrastructure">
-                            <a className="nav-link"><i className="fas fa-cloud-upload-alt"></i> <span>Code</span></a>
-                        </Link>
-                    </li>
+                    <ActiveNavLink href="/infrastructure">
+                        <a className="nav-link"><i className="fas fa-cloud-upload-alt"></i> <span>Code</span></a>
+                    </ActiveNavLink>
                 </ul>
             </aside>
         </div>

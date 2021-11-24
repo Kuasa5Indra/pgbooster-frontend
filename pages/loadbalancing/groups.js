@@ -1,91 +1,85 @@
 import Head from 'next/head';
 import Layout from '../../components/layouts/Layout';
-import Link from 'next/link';
 import api from '../../utils/api';
+import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
+import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { Card, Table, Row, Col } from "react-bootstrap";
+import { EmptyState } from "../../components/interface";
 
-const groups = ({targets}) => {
+const TargetGroupsPage = ({ targets }) => {
     return (
         <>
             <Head>
                 <title>Target Groups &mdash; PgBooster</title>
             </Head>
             <Layout>
-                <div className="main-content">
-                    <section className="section">
-                        <div className="section-header">
-                            <h1>Load Balancing</h1>
-                            <div className="section-header-breadcrumb">
-                                <div className="breadcrumb-item active"><Link href="/dashboard"><a>Dashboard</a></Link></div>
-                                <div className="breadcrumb-item">Target Groups</div>
-                            </div>
-                        </div>
-
-                        <div className="section-body">
-                            <h2 className="section-title">Target Groups</h2>
-                            <p className="section-lead">
-                                This is the list of target groups
-                            </p>
-                            <div className="row">
-                                <div className="col-md-12 col-sm-6 col-lg-12">
-                                    <div className="card">
-                                        <div className="card-header">
-                                            <h4>Target Groups</h4>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="table-responsive">
-                                                <table className="table table-bordered table-md">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Protocol</th>
-                                                            <th>Port</th>
-                                                            <th>IP Address Type</th>
-                                                            <th>Target Type</th>
-                                                            <th>VPC ID</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        { targets.data.map((data) => {
-                                                            return (
-                                                                <tr key={data.TargetGroupArn}>
-                                                                   <td>{data.TargetGroupName}</td>
-                                                                   <td>{data.Protocol}</td>
-                                                                   <td>{data.Port}</td>
-                                                                   <td>{data.IpAddressType}</td>
-                                                                   <td>{data.TargetType}</td>
-                                                                   <td>{data.VpcId}</td> 
-                                                                </tr>
-                                                            )
-                                                        }) }
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
+                <Section>
+                    <SectionHeader title="Load Balancing">
+                        <BreadcrumbHeader>
+                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
+                            <BreadcrumbItem text="Target Groups" />
+                        </BreadcrumbHeader>
+                    </SectionHeader>
+                    <SectionBody title="Target Groups" lead="This is the list of target groups">
+                        <Row>
+                            <Col sm={6} md={12} lg={12}>
+                                <Card>
+                                    <Card.Header><h4>Target Groups</h4></Card.Header>
+                                    <Card.Body>
+                                        {targets.data.length > 0 ? (
+                                            <Table responsive="md" bordered>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Protocol</th>
+                                                        <th>Port</th>
+                                                        <th>IP Address Type</th>
+                                                        <th>Target Type</th>
+                                                        <th>VPC ID</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {targets.data.map((data) => {
+                                                        return (
+                                                            <tr key={data.TargetGroupArn}>
+                                                                <td>{data.TargetGroupName}</td>
+                                                                <td>{data.Protocol}</td>
+                                                                <td>{data.Port}</td>
+                                                                <td>{data.IpAddressType}</td>
+                                                                <td>{data.TargetType}</td>
+                                                                <td>{data.VpcId}</td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </Table>
+                                        ) : (
+                                            <EmptyState />
+                                        )}
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </SectionBody>
+                </Section>
             </Layout>
         </>
     );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const res = await api.get('/loadbalancing/groups');
     const targets = await res.data;
-    
-    if(!targets){
+
+    if (!targets) {
         return {
             notFound: true
         };
     }
 
     return {
-        props: {targets},
-        revalidate: 10,
+        props: { targets }
     };
 }
 
-export default groups;
+export default TargetGroupsPage;

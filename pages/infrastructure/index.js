@@ -1,15 +1,18 @@
 import Head from "next/head";
 import Layout from "../../components/layouts/Layout";
-import Link from "next/link";
 import dateFormat from "dateformat";
 import { useRouter } from "next/router";
 import api from "../../utils/api";
 import swal from "sweetalert";
+import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
+import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
+import { EmptyState } from "../../components/interface";
 
-function infrastructure({ stacks }) {
+const InfrastructurePage = ({ stacks }) => {
     const router = useRouter();
 
-    async function deleteStack(name){
+    const deleteStack = async (name) => {
         swal({
             title: "Are you sure ?",
             text: "Once its deleted, you will not able to restore your stack",
@@ -17,22 +20,22 @@ function infrastructure({ stacks }) {
             buttons: true,
             dangerMode: true,
         })
-        .then((willDelete) => {
-            if(willDelete){
-                api.delete("/stacks?name=" + name)
-                .then((response) => {
-                    swal({
-                        title: response.data.status,
-                        text: response.data.message,
-                        icon: "success",
-                    }).then(function() {
-                        router.reload('/infrastructure');
-                    });
-                }).catch((error) => {
-                    console.error("Error on", error.response);
-                });
-            }
-        });
+            .then((willDelete) => {
+                if (willDelete) {
+                    api.delete("/stacks?name=" + name)
+                        .then((response) => {
+                            swal({
+                                title: response.data.status,
+                                text: response.data.message,
+                                icon: "success",
+                            }).then(function () {
+                                router.reload('/infrastructure');
+                            });
+                        }).catch((error) => {
+                            console.error("Error on", error.response);
+                        });
+                }
+            });
     }
 
     return (
@@ -41,35 +44,26 @@ function infrastructure({ stacks }) {
                 <title>Code &mdash; PgBooster</title>
             </Head>
             <Layout>
-                <div className="main-content">
-                    <section className="section">
-                        <div className="section-header">
-                            <h1>Code</h1>
-                            <div className="section-header-breadcrumb">
-                                <div className="breadcrumb-item active"><Link href="/dashboard"><a>Dashboard</a></Link></div>
-                                <div className="breadcrumb-item">Code</div>
-                            </div>
-                        </div>
-
-                        <div className="section-body">
-                            <h2 className="section-title">Infrastructure as Code</h2>
-                            <p className="section-lead">
-                                This is the list of stack that have built with code
-                            </p>
-                            <div className="row">
-                                <div className="col-md-12 col-sm-6 col-lg-12">
-                                    <div className="card">
-                                        <div className="card-header">
-                                            <h4>Stacks</h4>
-                                        </div>
-                                        
-                                        <div className="card-body">
-                                            <button type="button" className="btn btn-primary float-left" onClick={() => router.push('/infrastructure/create')}>
-                                                Upload Code
-                                            </button>
-                                            <br/><br/>
-                                            <div className="table-responsive">
-                                                <table className="table table-bordered table-md">
+                <Section>
+                    <SectionHeader title="Code">
+                        <BreadcrumbHeader>
+                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
+                            <BreadcrumbItem text="Code" />
+                        </BreadcrumbHeader>
+                    </SectionHeader>
+                    <SectionBody title="Infrastructure as Code" lead="This is the list of stacks that have built with code">
+                        <Row>
+                            <Col sm={6} md={12} lg={12}>
+                                <Card>
+                                    <Card.Header><h4>Instances</h4></Card.Header>
+                                    <Card.Body>
+                                        {stacks.data.length > 0 ? (
+                                            <>
+                                                <Button onClick={() => router.push('/infrastructure/create')} className="float-left">
+                                                    Upload Code
+                                                </Button>
+                                                <br /><br />
+                                                <Table responsive="md" bordered>
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -88,43 +82,46 @@ function infrastructure({ stacks }) {
                                                                     <td>{data.StackStatus}</td>
                                                                     <td>{dateFormat(data.CreationTime, "dd/mm/yyyy HH:MM:ss")}</td>
                                                                     <td>
-                                                                    <div className="btn-group" role="group" aria-label="Button Operation">
-                                                                        <button type="button" className="btn btn-info btn-icon icon-left" 
-                                                                                onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName }})}>
-                                                                            <i className="fas fa-info-circle"></i>Info
-                                                                        </button>
-                                                                        <button type="button" className="btn btn-warning btn-icon icon-left"
-                                                                                onClick={() => router.push({ pathname: '/infrastructure/edit/[name]', query: { name: data.StackName }})}>
-                                                                            <i className="fas fa-edit"></i>Update
-                                                                        </button>
-                                                                        <button type="button" className="btn btn-danger btn-icon icon-left" 
-                                                                                onClick={() => deleteStack(data.StackName) }>
-                                                                            <i className="fas fa-trash"></i>Delete
-                                                                        </button>
-                                                                    </div>
+                                                                        <ButtonGroup aria-label="Button Operation">
+                                                                            <Button variant="info" onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName } })}>
+                                                                                <i className="fas fa-info-circle"></i> Info
+                                                                            </Button>
+                                                                            <Button variant="warning" onClick={() => router.push({ pathname: '/infrastructure/edit/[name]', query: { name: data.StackName } })}>
+                                                                                <i className="fas fa-edit"></i> Update
+                                                                            </Button>
+                                                                            <Button variant="danger" onClick={() => deleteStack(data.StackName)}>
+                                                                                <i className="fas fa-trash"></i> Delete
+                                                                            </Button>
+                                                                        </ButtonGroup>
                                                                     </td>
                                                                 </tr>
                                                             );
                                                         })}
                                                     </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
+                                                </Table>
+                                            </>
+                                        ) : (
+                                            <EmptyState>
+                                                <Button onClick={() => router.push('/infrastructure/create')} className="float-left">
+                                                    Upload Code
+                                                </Button>
+                                            </EmptyState>
+                                        )}
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </SectionBody>
+                </Section>
             </Layout>
         </>
     );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const res = await api.get('/stacks')
     const stacks = await res.data
-    
+
     if (!stacks) {
         return {
             notFound: true,
@@ -132,9 +129,8 @@ export async function getStaticProps(context) {
     }
 
     return {
-        props: { stacks },
-        revalidate: 10,
+        props: { stacks }
     }
 }
 
-export default infrastructure;
+export default InfrastructurePage;

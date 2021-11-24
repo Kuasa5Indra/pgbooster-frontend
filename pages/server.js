@@ -1,26 +1,29 @@
 import Head from "next/head";
 import Layout from "../components/layouts/Layout";
-import Link from "next/link";
 import api from "../utils/api";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
+import { Section, SectionHeader, SectionBody } from "../components/bootstrap/Section";
+import { BreadcrumbHeader, BreadcrumbItem } from "../components/bootstrap/SectionBreadcrumb";
+import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
+import { EmptyState } from "../components/interface";
 
-function server({ instances }) {
+const ServerPage = ({ instances }) => {
     const router = useRouter();
 
-    async function startInstance(id) {
+    const startInstance = async (id) => {
         const res = await api.get("/instances/" + id + "/start")
         const instance = await res.data
         swal({
             title: instance.status,
             text: instance.message,
             icon: "success",
-        }).then(function() {
+        }).then(function () {
             router.reload('/server');
         });
     };
 
-    async function stopInstance(id) {
+    const stopInstance = async (id) => {
         swal({
             title: "Are you sure ?",
             text: "Once its stopped, you can still start your instance again",
@@ -28,34 +31,34 @@ function server({ instances }) {
             buttons: true,
             dangerMode: true,
         })
-        .then(async (willDelete) => {
-            if (willDelete) {
-                const res = await api.get("/instances/" + id + "/stop")
-                const instance = await res.data
-                swal({
-                    title: instance.status,
-                    text: instance.message,
-                    icon: "success",
-                }).then(function() {
-                    router.reload('/server');
-                });
-            }
-        });
+            .then(async (willDelete) => {
+                if (willDelete) {
+                    const res = await api.get("/instances/" + id + "/stop")
+                    const instance = await res.data
+                    swal({
+                        title: instance.status,
+                        text: instance.message,
+                        icon: "success",
+                    }).then(function () {
+                        router.reload('/server');
+                    });
+                }
+            });
     };
 
-    async function rebootInstance(id) {
+    const rebootInstance = async (id) => {
         const res = await api.get("/instances/" + id + "/reboot")
         const instance = await res.data
         swal({
             title: instance.status,
             text: instance.message,
             icon: "success",
-        }).then(function() {
+        }).then(function () {
             router.reload('/server');
         });
     };
 
-    async function terminateInstance(id) {
+    const terminateInstance = async (id) => {
         swal({
             title: "Are you sure ?",
             text: "Once its terminated, you will not able to restore your instance",
@@ -63,19 +66,19 @@ function server({ instances }) {
             buttons: true,
             dangerMode: true,
         })
-        .then(async (willDelete) => {
-            if (willDelete) {
-                const res = await api.get("/instances/" + id + "/terminate")
-                const instance = await res.data
-                swal({
-                    title: instance.status,
-                    text: instance.message,
-                    icon: "success",
-                }).then(function() {
-                    router.reload('/server');
-                });
-            }
-        });
+            .then(async (willDelete) => {
+                if (willDelete) {
+                    const res = await api.get("/instances/" + id + "/terminate")
+                    const instance = await res.data
+                    swal({
+                        title: instance.status,
+                        text: instance.message,
+                        icon: "success",
+                    }).then(function () {
+                        router.reload('/server');
+                    });
+                }
+            });
     };
 
     return (
@@ -84,86 +87,76 @@ function server({ instances }) {
                 <title>Server &mdash; PgBooster</title>
             </Head>
             <Layout>
-                <div className="main-content">
-                    <section className="section">
-                        <div className="section-header">
-                            <h1>Server</h1>
-                            <div className="section-header-breadcrumb">
-                                <div className="breadcrumb-item active"><Link href="/dashboard"><a>Dashboard</a></Link></div>
-                                <div className="breadcrumb-item">Server</div>
-                            </div>
-                        </div>
-
-                        <div className="section-body">
-                            <h2 className="section-title">Cloud Server</h2>
-                            <p className="section-lead">
-                                This is the list of running servers
-                            </p>
-                            <div className="row">
-                                <div className="col-md-12 col-sm-6 col-lg-12">
-                                    <div className="card">
-                                        <div className="card-header">
-                                            <h4>Instances</h4>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="table-responsive">
-                                                <table className="table table-bordered table-md">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Name</th>
-                                                            <th>Status</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    {instances.data.map((data) => {
-                                                        return (
-                                                            <tbody key={data.ReservationId}>
-                                                                {data.Instances.map((instance) => {
-                                                                    return (
-                                                                        <tr key={instance.InstanceId}>
-                                                                            <td>
-                                                                                {instance.InstanceId}
-                                                                            </td>
-                                                                            <td>{instance.Tags.find((tag) => tag.Key == "Name").Value}</td>
-                                                                            <td>{instance.State.Name}</td>
-                                                                            <td>
-                                                                                <div className="btn-group" role="group" aria-label="Button Operation">
-                                                                                    <button type="button" className="btn btn-primary btn-icon icon-left" onClick={() => startInstance(instance.InstanceId)}>
-                                                                                        <i className="far fa-play-circle"></i>Start
-                                                                                    </button>
-                                                                                    <button type="button" className="btn btn-warning btn-icon icon-left" onClick={() => stopInstance(instance.InstanceId)}>
-                                                                                        <i className="fas fa-stop-circle"></i>Stop
-                                                                                    </button>
-                                                                                    <button type="button" className="btn btn-dark btn-icon icon-left" onClick={() => rebootInstance(instance.InstanceId)}>
-                                                                                        <i className="fas fa-bolt"></i>Reboot
-                                                                                    </button>
-                                                                                    <button type="button" className="btn btn-danger btn-icon icon-left" onClick={() => terminateInstance(instance.InstanceId)}>
-                                                                                        <i className="fas fa-power-off"></i>Terminate
-                                                                                    </button>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                    );
-                                                                })}
-                                                            </tbody>
-                                                        );
-                                                    })}
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
+                <Section>
+                    <SectionHeader title="Server">
+                        <BreadcrumbHeader>
+                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
+                            <BreadcrumbItem text="Server" />
+                        </BreadcrumbHeader>
+                    </SectionHeader>
+                    <SectionBody title="Cloud Server" lead="This is the list of running servers">
+                        <Row>
+                            <Col sm={6} md={12} lg={12}>
+                                <Card>
+                                    <Card.Header><h4>Instances</h4></Card.Header>
+                                    <Card.Body>
+                                        {instances.data.length > 0 ? (
+                                            <Table responsive="lg" bordered>
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Name</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                {instances.data.map((data) => {
+                                                    return (
+                                                        <tbody key={data.ReservationId}>
+                                                            {data.Instances.map((instance) => {
+                                                                return (
+                                                                    <tr key={instance.InstanceId}>
+                                                                        <td>{instance.InstanceId}</td>
+                                                                        <td>{instance.Tags.find((tag) => tag.Key == "Name").Value}</td>
+                                                                        <td>{instance.State.Name}</td>
+                                                                        <td>
+                                                                            <ButtonGroup aria-label="Button Operation">
+                                                                                <Button variant="primary" onClick={() => startInstance(instance.InstanceId)}>
+                                                                                    <i className="fas fa-play-circle"></i> Start
+                                                                                </Button>
+                                                                                <Button variant="warning" onClick={() => stopInstance(instance.InstanceId)}>
+                                                                                    <i className="fas fa-stop-circle"></i> Stop
+                                                                                </Button>
+                                                                                <Button variant="dark" onClick={() => rebootInstance(instance.InstanceId)}>
+                                                                                    <i className="fas fa-bolt"></i> Reboot
+                                                                                </Button>
+                                                                                <Button variant="danger" onClick={() => terminateInstance(instance.InstanceId)}>
+                                                                                    <i className="fas fa-power-off"></i> Terminate
+                                                                                </Button>
+                                                                            </ButtonGroup>
+                                                                        </td>
+                                                                    </tr>
+                                                                );
+                                                            })}
+                                                        </tbody>
+                                                    );
+                                                })}
+                                            </Table>
+                                        ) : (
+                                            <EmptyState />
+                                        )}
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </SectionBody>
+                </Section>
             </Layout>
         </>
     );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const res = await api.get('/instances')
     const instances = await res.data
 
@@ -174,9 +167,8 @@ export async function getStaticProps(context) {
     }
 
     return {
-        props: { instances },
-        revalidate: 10,
+        props: { instances }
     }
 }
 
-export default server;
+export default ServerPage;
