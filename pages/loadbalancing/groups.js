@@ -67,7 +67,7 @@ const TargetGroupsPage = ({ targets }) => {
     );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const res = await api.get('/loadbalancing/groups');
     const targets = await res.data;
 
@@ -78,8 +78,7 @@ export async function getStaticProps(context) {
     }
 
     return {
-        props: { targets },
-        revalidate: 10,
+        props: { targets }
     };
 }
 

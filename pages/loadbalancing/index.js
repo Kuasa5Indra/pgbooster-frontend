@@ -70,7 +70,7 @@ const LoadBalancerPage = ({ loadbalancer }) => {
     );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const res = await api.get('/loadbalancing')
     const loadbalancer = await res.data
 
@@ -81,8 +81,7 @@ export async function getStaticProps(context) {
     }
 
     return {
-        props: { loadbalancer },
-        revalidate: 10
+        props: { loadbalancer }
     };
 }
 

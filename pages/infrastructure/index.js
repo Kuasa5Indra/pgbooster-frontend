@@ -118,7 +118,7 @@ const InfrastructurePage = ({ stacks }) => {
     );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const res = await api.get('/stacks')
     const stacks = await res.data
 
@@ -129,8 +129,7 @@ export async function getStaticProps(context) {
     }
 
     return {
-        props: { stacks },
-        revalidate: 10,
+        props: { stacks }
     }
 }
 

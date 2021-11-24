@@ -156,7 +156,7 @@ const ServerPage = ({ instances }) => {
     );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const res = await api.get('/instances')
     const instances = await res.data
 
@@ -167,8 +167,7 @@ export async function getStaticProps(context) {
     }
 
     return {
-        props: { instances },
-        revalidate: 10,
+        props: { instances }
     }
 }
 

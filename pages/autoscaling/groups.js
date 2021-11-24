@@ -68,7 +68,7 @@ const AutoScalingGroupsPage = ({ items }) => {
     );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const res = await api.get('/autoscaling/groups')
     const items = await res.data
 
@@ -79,8 +79,7 @@ export async function getStaticProps(context) {
     }
 
     return {
-        props: { items },
-        revalidate: 10,
+        props: { items }
     }
 }
 
