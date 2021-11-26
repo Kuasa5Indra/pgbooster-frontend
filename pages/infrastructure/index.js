@@ -22,7 +22,7 @@ const InfrastructurePage = ({ stacks }) => {
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    api.delete("/stacks?name=" + name)
+                    api.delete("/stacks/" + name)
                         .then((response) => {
                             swal({
                                 title: response.data.status,
@@ -32,7 +32,12 @@ const InfrastructurePage = ({ stacks }) => {
                                 router.reload('/infrastructure');
                             });
                         }).catch((error) => {
-                            console.error("Error on", error.response);
+                            // console.error("Error on", error.response);
+                            swal({
+                                title: error.response.data.status,
+                                text: error.response.data.message,
+                                icon: "error",
+                            })
                         });
                 }
             });

@@ -5,11 +5,64 @@ import api from "../../utils/api";
 import { useRouter } from 'next/router';
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { Card, Row, Col } from "react-bootstrap";
+import { Card, Row, Col, Button } from "react-bootstrap";
+import swal from "sweetalert";
 
 const ShowStackPage = ({ stack }) => {
     const router = useRouter();
     const { name } = router.query;
+
+    const enableProtection = () => {
+        swal({
+            title: "Are you sure ?",
+            text: "Once enabled, you will not able to delete your stack",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willEnable) => {
+                if (willEnable) {
+                    api.get(`/stacks/update/${name}?protect=true`)
+                        .then((response) => {
+                            swal({
+                                title: response.data.status,
+                                text: response.data.message,
+                                icon: "success",
+                            }).then(function () {
+                                router.reload('/infrastructure/' + name);
+                            });
+                        }).catch((error) => {
+                            console.error("Error on", error.response);
+                        });
+                }
+            });
+    }
+
+    const disableProtection = () => {
+        swal({
+            title: "Are you sure ?",
+            text: "Once disable, you will be able to delete your stack",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDisable) => {
+                if (willDisable) {
+                    api.get(`/stacks/update/${name}?protect=false`)
+                        .then((response) => {
+                            swal({
+                                title: response.data.status,
+                                text: response.data.message,
+                                icon: "success",
+                            }).then(function () {
+                                router.reload('/infrastructure/' + name);
+                            });
+                        }).catch((error) => {
+                            console.error("Error on", error.response);
+                        });
+                }
+            });
+    }
 
     return (
         <>
@@ -40,6 +93,13 @@ const ShowStackPage = ({ stack }) => {
                                         <b>Enable Termination Protection</b>
                                         <p>{stack[0].EnableTerminationProtection ? "true" : "false"}</p>
                                     </Card.Body>
+                                    <Card.Footer>
+                                        {stack[0].EnableTerminationProtection ? (
+                                            <Button variant="danger" onClick={() => disableProtection()}>Disable Termination Protection</Button>
+                                        ) : (
+                                            <Button variant="success" onClick={() => enableProtection()}>Enable Termination Protection</Button>
+                                        )}
+                                    </Card.Footer>
                                 </Card>
                             </Col>
                         </Row>
@@ -62,7 +122,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-    const res = await api.get(`/stacks/describe?name=${params.name}`)
+    const res = await api.get(`/stacks/describe/${params.name}`)
     const stack = await res.data.data
     return { props: { stack } }
 }

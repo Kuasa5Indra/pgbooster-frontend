@@ -31,8 +31,8 @@ const ServerPage = ({ instances }) => {
             buttons: true,
             dangerMode: true,
         })
-            .then(async (willDelete) => {
-                if (willDelete) {
+            .then(async (willStop) => {
+                if (willStop) {
                     const res = await api.get("/instances/" + id + "/stop")
                     const instance = await res.data
                     swal({
@@ -66,8 +66,8 @@ const ServerPage = ({ instances }) => {
             buttons: true,
             dangerMode: true,
         })
-            .then(async (willDelete) => {
-                if (willDelete) {
+            .then(async (willTerminate) => {
+                if (willTerminate) {
                     const res = await api.get("/instances/" + id + "/terminate")
                     const instance = await res.data
                     swal({
