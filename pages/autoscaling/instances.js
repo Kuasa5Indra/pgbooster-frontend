@@ -1,12 +1,46 @@
 import Head from "next/head";
 import Layout from "../../components/layouts/Layout";
 import api from "../../utils/api";
+import { useRouter } from "next/router";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { Card, Table, Row, Col } from "react-bootstrap";
+import { Card, Table, Row, Col, Button } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
+import swal from "sweetalert";
 
 const AutoScalingInstancesPage = ({ items }) => {
+    const router = useRouter();
+    
+    const terminateInstance = (id) => {
+        swal({
+            title: "Are you sure ?",
+            text: "Once its terminated, you will not able to restore your instance and will be created another one",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willTerminate) => {
+                if (willTerminate) {
+                    api.delete(`/autoscaling/instances/${id}`)
+                        .then((response) => {
+                            swal({
+                                title: response.data.status,
+                                text: response.data.message,
+                                icon: "success",
+                            }).then(function () {
+                                router.reload('/autoscaling/instances');
+                            });
+                        }).catch((error) => {
+                            swal({
+                                title: error.response.data.status,
+                                text: error.response.data.message,
+                                icon: "error",
+                            })
+                        })
+                }
+            });
+    }
+
     return (
         <>
             <Head>
@@ -36,6 +70,7 @@ const AutoScalingInstancesPage = ({ items }) => {
                                                         <th>Availability Zone</th>
                                                         <th>Lifecycle State</th>
                                                         <th>Status</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -48,6 +83,11 @@ const AutoScalingInstancesPage = ({ items }) => {
                                                                 <td>{data.AvailabilityZone}</td>
                                                                 <td>{data.LifecycleState}</td>
                                                                 <td>{data.HealthStatus}</td>
+                                                                <td>
+                                                                    <Button variant="danger" onClick={() => terminateInstance(data.InstanceId)}>
+                                                                        <i className="fas fa-power-off"></i>
+                                                                    </Button>
+                                                                </td>
                                                             </tr>
                                                         )
                                                     })}

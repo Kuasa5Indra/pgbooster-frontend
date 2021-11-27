@@ -22,7 +22,7 @@ const InfrastructurePage = ({ stacks }) => {
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    api.delete("/stacks?name=" + name)
+                    api.delete("/stacks/" + name)
                         .then((response) => {
                             swal({
                                 title: response.data.status,
@@ -32,7 +32,12 @@ const InfrastructurePage = ({ stacks }) => {
                                 router.reload('/infrastructure');
                             });
                         }).catch((error) => {
-                            console.error("Error on", error.response);
+                            // console.error("Error on", error.response);
+                            swal({
+                                title: error.response.data.status,
+                                text: error.response.data.message,
+                                icon: "error",
+                            })
                         });
                 }
             });
@@ -55,12 +60,12 @@ const InfrastructurePage = ({ stacks }) => {
                         <Row>
                             <Col sm={6} md={12} lg={12}>
                                 <Card>
-                                    <Card.Header><h4>Instances</h4></Card.Header>
+                                    <Card.Header><h4>Stacks</h4></Card.Header>
                                     <Card.Body>
                                         {stacks.data.length > 0 ? (
                                             <>
                                                 <Button onClick={() => router.push('/infrastructure/create')} className="float-left">
-                                                    Upload Code
+                                                    <i className="fas fa-file-upload"></i> Upload Code
                                                 </Button>
                                                 <br /><br />
                                                 <Table responsive="md" bordered>
@@ -70,7 +75,7 @@ const InfrastructurePage = ({ stacks }) => {
                                                             <th>Name</th>
                                                             <th>Status</th>
                                                             <th>Created at</th>
-                                                            <th>Action</th>
+                                                            <th>Info Stack</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -82,17 +87,9 @@ const InfrastructurePage = ({ stacks }) => {
                                                                     <td>{data.StackStatus}</td>
                                                                     <td>{dateFormat(data.CreationTime, "dd/mm/yyyy HH:MM:ss")}</td>
                                                                     <td>
-                                                                        <ButtonGroup aria-label="Button Operation">
-                                                                            <Button variant="info" onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName } })}>
-                                                                                <i className="fas fa-info-circle"></i> Info
-                                                                            </Button>
-                                                                            <Button variant="warning" onClick={() => router.push({ pathname: '/infrastructure/edit/[name]', query: { name: data.StackName } })}>
-                                                                                <i className="fas fa-edit"></i> Update
-                                                                            </Button>
-                                                                            <Button variant="danger" onClick={() => deleteStack(data.StackName)}>
-                                                                                <i className="fas fa-trash"></i> Delete
-                                                                            </Button>
-                                                                        </ButtonGroup>
+                                                                        <Button variant="info" onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName } })}>
+                                                                            <i className="fas fa-info-circle"></i>
+                                                                        </Button>
                                                                     </td>
                                                                 </tr>
                                                             );
@@ -103,7 +100,7 @@ const InfrastructurePage = ({ stacks }) => {
                                         ) : (
                                             <EmptyState>
                                                 <Button onClick={() => router.push('/infrastructure/create')} className="float-left">
-                                                    Upload Code
+                                                    <i className="fas fa-file-upload"></i> Upload Code
                                                 </Button>
                                             </EmptyState>
                                         )}

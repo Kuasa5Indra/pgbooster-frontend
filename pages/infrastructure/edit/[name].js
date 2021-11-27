@@ -8,13 +8,14 @@ import { Section, SectionHeader, SectionBody } from "../../../components/bootstr
 import { BreadcrumbHeader, BreadcrumbItem } from "../../../components/bootstrap/SectionBreadcrumb";
 import { Card, Col, Row, Form, Button } from "react-bootstrap";
 
-const EditStackPage = () => {
+const EditStackPage = ({stack}) => {
     const router = useRouter();
     const { name } = router.query;
 
     const [query, setQuery] = useState({
         stackname: name,
-        code: null
+        code: null,
+        disable_rollback: stack[0].DisableRollback,
     });
 
     const handleParam = () => (e) => {
@@ -35,38 +36,43 @@ const EditStackPage = () => {
         console.log(e.target.files[0])
     };
 
+    const handleRadio = () => (e) => {
+        const name = e.target.name;
+        const value = (e.target.value === 'true');
+        setQuery((prevState) => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
     const formSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("name", query.stackname);
         formData.append('codeFile', query.code);
-        api.post("/stacks/update",
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        ).then((response) => {
-            swal({
-                title: response.data.status,
-                text: response.data.message,
-                icon: "success",
-            }).then(function () {
-                router.push('/infrastructure');
-            });
-        }).catch((error) => {
-            var errorData = error.response.data.errors;
-            var errorMessages = errorData.map(({ msg }) => msg)
-            swal({
-                title: "Error",
-                text: errorMessages.toString(),
-                icon: "error",
+        formData.append('disable_rollback', query.disable_rollback);
+        api.post("/stacks/update", formData)
+            .then((response) => {
+                swal({
+                    title: response.data.status,
+                    text: response.data.message,
+                    icon: "success",
+                }).then(function () {
+                    router.push('/infrastructure');
+                })
             })
-            // console.error("Error on", error.response.headers);
-            // console.log(error.response.data);
-            // console.log(error.response.status);
-        });
+            .catch((error) => {
+                var errorData = error.response.data.errors;
+                var errorMessages = errorData.map(({ msg }) => msg)
+                swal({
+                    title: "Error",
+                    text: errorMessages.toString(),
+                    icon: "error",
+                })
+                // console.error("Error on", error.response.headers);
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+            });
     };
 
     return (
@@ -108,6 +114,25 @@ const EditStackPage = () => {
                                                     onChange={handleFileChange()}
                                                 />
                                             </Form.Group>
+                                            <Form.Group>
+                                                <Form.Label>Disable Rollback</Form.Label>
+                                                <Form.Check
+                                                    type="radio"
+                                                    label="True"
+                                                    name="disable_rollback"
+                                                    value="true"
+                                                    checked={query.disable_rollback}
+                                                    onChange={handleRadio()}
+                                                />
+                                                <Form.Check
+                                                    type="radio"
+                                                    label="False"
+                                                    name="disable_rollback"
+                                                    value="false"
+                                                    checked={!query.disable_rollback}
+                                                    onChange={handleRadio()}
+                                                />
+                                            </Form.Group>
                                         </Card.Body>
                                         <Card.Footer>
                                             <Button type="submit">Submit</Button>
@@ -121,6 +146,23 @@ const EditStackPage = () => {
             </Layout>
         </>
     );
+}
+
+export async function getStaticPaths() {
+    const res = await api.get("/stacks")
+    const stacks = await res.data.data
+
+    const paths = stacks.map((stack) => ({
+        params: { name: stack.StackName },
+    }))
+
+    return { paths, fallback: false }
+}
+
+export async function getStaticProps({ params }) {
+    const res = await api.get(`/stacks/describe/${params.name}`)
+    const stack = await res.data.data
+    return { props: { stack } }
 }
 
 export default EditStackPage;

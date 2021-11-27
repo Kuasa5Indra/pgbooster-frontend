@@ -13,7 +13,9 @@ const CreateStackPage = () => {
 
     const [query, setQuery] = useState({
         stackname: "",
-        code: null
+        code: null,
+        disable_rollback: false,
+        protection: false
     });
 
     const handleParam = () => (e) => {
@@ -34,38 +36,44 @@ const CreateStackPage = () => {
         console.log(e.target.files[0])
     };
 
+    const handleRadio = () => (e) => {
+        const name = e.target.name;
+        const value = (e.target.value === 'true');
+        setQuery((prevState) => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
     const formSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("name", query.stackname);
         formData.append('codeFile', query.code);
-        api.post("/stacks",
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        ).then((response) => {
-            swal({
-                title: response.data.status,
-                text: response.data.message,
-                icon: "success",
-            }).then(function () {
-                router.push('/infrastructure');
-            });
-        }).catch((error) => {
-            var errorData = error.response.data.errors;
-            var errorMessages = errorData.map(({ msg }) => msg)
-            swal({
-                title: "Error",
-                text: errorMessages.toString(),
-                icon: "error",
+        formData.append('disable_rollback', query.disable_rollback);
+        formData.append('protect', query.protection);
+        api.post("/stacks", formData)
+            .then((response) => {
+                swal({
+                    title: response.data.status,
+                    text: response.data.message,
+                    icon: "success",
+                }).then(function () {
+                    router.push('/infrastructure');
+                })
             })
-            // console.error("Error on", error.response.headers);
-            // console.log(error.response.data);
-            // console.log(error.response.status);
-        });
+            .catch((error) => {
+                var errorData = error.response.data.errors;
+                var errorMessages = errorData.map(({ msg }) => msg)
+                swal({
+                    title: "Error",
+                    text: errorMessages.toString(),
+                    icon: "error",
+                })
+                // console.error("Error on", error.response.headers);
+                // console.log(error.response.data);
+                // console.log(error.response.status);
+            });
     };
 
     return (
@@ -104,6 +112,44 @@ const CreateStackPage = () => {
                                                     className="form-control-file"
                                                     accept=".json, .yaml, .yml"
                                                     onChange={handleFileChange()}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group>
+                                                <Form.Label>Disable Rollback</Form.Label>
+                                                <Form.Check
+                                                    type="radio"
+                                                    label="True"
+                                                    name="disable_rollback"
+                                                    value="true"
+                                                    checked={query.disable_rollback}
+                                                    onChange={handleRadio()}
+                                                />
+                                                <Form.Check
+                                                    type="radio"
+                                                    label="False"
+                                                    name="disable_rollback"
+                                                    value="false"
+                                                    checked={!query.disable_rollback}
+                                                    onChange={handleRadio()}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group>
+                                                <Form.Label>Enable Termination Protection</Form.Label>
+                                                <Form.Check
+                                                    type="radio"
+                                                    label="True"
+                                                    name="protection"
+                                                    value="true"
+                                                    checked={query.protection}
+                                                    onChange={handleRadio()}
+                                                />
+                                                <Form.Check
+                                                    type="radio"
+                                                    label="False"
+                                                    name="protection"
+                                                    value="false"
+                                                    checked={!query.protection}
+                                                    onChange={handleRadio()}
                                                 />
                                             </Form.Group>
                                         </Card.Body>

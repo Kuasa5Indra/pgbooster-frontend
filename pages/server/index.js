@@ -1,12 +1,12 @@
 import Head from "next/head";
-import Layout from "../components/layouts/Layout";
-import api from "../utils/api";
+import Layout from "../../components/layouts/Layout";
+import api from "../../utils/api";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
-import { Section, SectionHeader, SectionBody } from "../components/bootstrap/Section";
-import { BreadcrumbHeader, BreadcrumbItem } from "../components/bootstrap/SectionBreadcrumb";
+import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
+import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
-import { EmptyState } from "../components/interface";
+import { EmptyState } from "../../components/interface";
 
 const ServerPage = ({ instances }) => {
     const router = useRouter();
@@ -31,8 +31,8 @@ const ServerPage = ({ instances }) => {
             buttons: true,
             dangerMode: true,
         })
-            .then(async (willDelete) => {
-                if (willDelete) {
+            .then(async (willStop) => {
+                if (willStop) {
                     const res = await api.get("/instances/" + id + "/stop")
                     const instance = await res.data
                     swal({
@@ -66,8 +66,8 @@ const ServerPage = ({ instances }) => {
             buttons: true,
             dangerMode: true,
         })
-            .then(async (willDelete) => {
-                if (willDelete) {
+            .then(async (willTerminate) => {
+                if (willTerminate) {
                     const res = await api.get("/instances/" + id + "/terminate")
                     const instance = await res.data
                     swal({
@@ -107,6 +107,7 @@ const ServerPage = ({ instances }) => {
                                                         <th>ID</th>
                                                         <th>Name</th>
                                                         <th>Status</th>
+                                                        <th>Info</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -119,6 +120,11 @@ const ServerPage = ({ instances }) => {
                                                                         <td>{instance.InstanceId}</td>
                                                                         <td>{instance.Tags.find((tag) => tag.Key == "Name").Value}</td>
                                                                         <td>{instance.State.Name}</td>
+                                                                        <td>
+                                                                            <Button variant="info" onClick={() => router.push({ pathname: '/server/[id]', query: { id: instance.InstanceId } })}>
+                                                                                <i className="fas fa-info-circle"></i>
+                                                                            </Button>
+                                                                        </td>
                                                                         <td>
                                                                             <ButtonGroup aria-label="Button Operation">
                                                                                 <Button variant="primary" onClick={() => startInstance(instance.InstanceId)}>
