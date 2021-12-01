@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Row, Col, Card, Form, Container, Button } from 'react-bootstrap';
 
 const LoginPage = () => {
@@ -31,9 +32,11 @@ const LoginPage = () => {
                       <div className="d-block">
                         <Form.Label className="control-label">Password</Form.Label>
                         <div className="float-right">
-                          <a href="auth-forgot-password.html" className="text-small">
-                            Forgot Password?
-                          </a>
+                          <Link href="/forgot-password">
+                            <a className="text-small">
+                              Forgot Password?
+                            </a>
+                          </Link>
                         </div>
                       </div>
                       <Form.Control
