@@ -7,7 +7,7 @@ const ActiveDropdownNavLink = ({routes, title, iconClassName, children}) => {
     if(routes.includes(router.asPath)){
         return (
             <li className="nav-item dropdown active">
-                <a href="" className="nav-link has-dropdown"><i className={iconClassName}></i> <span>{title}</span></a>
+                <a href="#" className="nav-link has-dropdown" data-toggle="dropdown"><i className={iconClassName}></i> <span>{title}</span></a>
                 <ul className="dropdown-menu">
                     { children }
                 </ul>
@@ -16,7 +16,7 @@ const ActiveDropdownNavLink = ({routes, title, iconClassName, children}) => {
     } else {
         return (
             <li className="nav-item dropdown">
-                <a href="" className="nav-link has-dropdown"><i className={iconClassName}></i> <span>{title}</span></a>
+                <a href="#" className="nav-link has-dropdown" data-toggle="dropdown"><i className={iconClassName}></i> <span>{title}</span></a>
                 <ul className="dropdown-menu">
                     { children }
                 </ul>
