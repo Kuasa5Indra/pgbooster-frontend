@@ -1,7 +1,7 @@
 import Head from "next/head";
-import Layout from "../components/layouts/Layout";
-import { Hero } from "../components/interface";
-import { Section, SectionHeader, SectionBody } from "../components/bootstrap/Section";
+import Layout from "../../components/layouts/Layout";
+import { Hero } from "../../components/interface";
+import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 
 const DashboardPage = () => {
     return (

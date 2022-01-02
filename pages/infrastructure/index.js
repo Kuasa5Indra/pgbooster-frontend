@@ -9,6 +9,7 @@ import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/Sec
 import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 
+
 const InfrastructurePage = ({ stacks }) => {
     const router = useRouter();
 

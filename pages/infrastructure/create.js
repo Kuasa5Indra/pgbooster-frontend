@@ -39,6 +39,7 @@ const CreateStackPage = () => {
                                 <Card>
                                     <Formik
                                         validationSchema={schema}
+                                        validateOnChange={false}
                                         initialValues={{
                                             stackname: "",
                                             code: null,
@@ -75,7 +76,7 @@ const CreateStackPage = () => {
                                         }}
                                     >
                                         {({ handleSubmit, handleChange, values, errors, setFieldValue }) => (
-                                            <Form noValidate onSubmit={handleSubmit} encType="multipart/form-data">
+                                            <Form onSubmit={handleSubmit} encType="multipart/form-data">
                                                 <Card.Body>
                                                     <Form.Group>
                                                         <Form.Label>Stack Name</Form.Label>

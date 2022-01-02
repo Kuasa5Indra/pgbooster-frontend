@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Layout from "../../../components/layouts/Layout";
 import api from "../../../utils/api";
-import { useState } from "react";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
 import { Section, SectionHeader, SectionBody } from "../../../components/bootstrap/Section";
@@ -40,6 +39,7 @@ const EditStackPage = ({ stack }) => {
                                 <Card>
                                     <Formik
                                         validationSchema={schema}
+                                        validateOnChange={false}
                                         initialValues={{
                                             stackname: name,
                                             code: null,

@@ -6,8 +6,10 @@ import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/
 import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Table, Row, Col } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
+import nookies from "nookies";
 
 const LoadBalancerPage = ({ loadbalancer }) => {
+
     return (
         <>
             <Head>
@@ -71,7 +73,8 @@ const LoadBalancerPage = ({ loadbalancer }) => {
 }
 
 export async function getServerSideProps(context) {
-    const res = await api.get('/loadbalancing')
+    const token = nookies.get(context).token;
+    const res = await api.get('/loadbalancing', {headers: { "Authorization": "Bearer " + token}})
     const loadbalancer = await res.data
 
     if (!loadbalancer) {

@@ -1,8 +1,19 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import { Row, Col, Card, Form, Container, Button } from 'react-bootstrap';
+import {Row, Col, Card, Form, Container, Button, FormControl} from 'react-bootstrap';
+import {Formik} from "formik";
+import * as Yup from 'yup';
+import api from "../utils/api";
+import {useRouter} from "next/router";
+import swal from "sweetalert";
+
+const schema = Yup.object().shape({
+    email: Yup.string().email().required()
+});
 
 const ForgotPasswordPage = () => {
+    const router = useRouter();
+
     return (
         <>
             <Head>
@@ -20,18 +31,49 @@ const ForgotPasswordPage = () => {
                                 <Card.Header><h4>Forgot Password</h4></Card.Header>
                                 <Card.Body>
                                     <p className="text-muted">We will send a link to reset your password</p>
-                                    <Form>
-                                        <Form.Group>
-                                            <Form.Label>Email</Form.Label>
-                                            <Form.Control
-                                                type="email"
-                                                name="email"
-                                            />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Button type="submit" size="lg" block>Forgot Password</Button>
-                                        </Form.Group>
-                                    </Form>
+                                    <Formik
+                                        validationSchema={schema}
+                                        initialValues={{
+                                            email: ""
+                                        }}
+                                        onSubmit={(values) => {
+                                            const formData = new FormData();
+                                            formData.append("email", values.email);
+                                            api.post('/auth/forgot-password', formData)
+                                                .then((response) => {
+                                                    swal({
+                                                        title: response.data.status,
+                                                        text: response.data.message,
+                                                        icon: "success",
+                                                    }).then(function () {
+                                                        sessionStorage.setItem('email', values.email);
+                                                        router.push('/reset-password');
+                                                    })
+                                                })
+                                                .catch((error) => {
+                                                    console.log(error.response.data.message);
+                                                })
+                                        }}
+                                    >
+                                        {({handleSubmit, handleChange, values, errors}) => (
+                                            <Form onSubmit={handleSubmit}>
+                                                <Form.Group>
+                                                    <Form.Label>Email</Form.Label>
+                                                    <Form.Control
+                                                        type="email"
+                                                        name="email"
+                                                        value={values.email}
+                                                        onChange={handleChange}
+                                                        isInvalid={!!errors.email}
+                                                    />
+                                                    <FormControl.Feedback type="invalid">{errors.email}</FormControl.Feedback>
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Button type="submit" size="lg" block>Forgot Password</Button>
+                                                </Form.Group>
+                                            </Form>
+                                        )}
+                                    </Formik>
                                 </Card.Body>
                             </Card>
                             <div className="simple-footer">
