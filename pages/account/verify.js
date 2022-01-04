@@ -6,6 +6,7 @@ import api from "../../utils/api";
 import {useRouter} from "next/router";
 import swal from "sweetalert";
 import * as Yup from "yup";
+import nookies from "nookies";
 
 const schema = Yup.object().shape({
     email: Yup.string().email().required(),
@@ -45,7 +46,7 @@ const VerifyAccountPage = () => {
                     <Row>
                         <Col sm={{ span: 8, offset: 2 }} md={{ span: 6, offset: 3 }} lg={{ span: 6, offset: 3 }} xl={{ span: 4, offset: 4 }} className="col-12">
                             <div className="login-brand">
-                                <Image src="/assets/img/stisla-fill.svg" alt="logo" width={100} height={100} className="shadow-light rounded-circle" />
+                                <Image src="/assets/img/pgbooster.png" alt="logo" width={100} height={100} className="shadow-light rounded-circle" />
                             </div>
 
                             <Card className="card-primary">
@@ -56,7 +57,7 @@ const VerifyAccountPage = () => {
                                         validateOnChange={false}
                                         validationSchema={schema}
                                         initialValues={{
-                                            email: "",
+                                            email: nookies.get().unverifiedEmail,
                                             code: ""
                                         }}
                                         onSubmit={(values) => {
@@ -65,6 +66,7 @@ const VerifyAccountPage = () => {
                                             formData.append("code", values.code);
                                             api.post('/auth/register/confirm', formData)
                                                 .then((response) => {
+                                                    nookies.destroy(null, 'unverifiedEmail')
                                                     swal({
                                                         title: response.data.status,
                                                         text: response.data.message,

@@ -6,6 +6,7 @@ import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/
 import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Table, Row, Col } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
+import nookies from "nookies";
 
 const AutoScalingGroupsPage = ({ items }) => {
     return (
@@ -69,7 +70,8 @@ const AutoScalingGroupsPage = ({ items }) => {
 }
 
 export async function getServerSideProps(context) {
-    const res = await api.get('/autoscaling/groups')
+    const token = nookies.get(context).token;
+    const res = await api.get('/autoscaling/groups',{headers: { "Authorization": "Bearer " + token}})
     const items = await res.data
 
     if (!items) {

@@ -8,6 +8,7 @@ import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/Sec
 import { Card, Col, Row, Form, Button, FormControl } from "react-bootstrap";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import nookies from "nookies";
 
 const schema = Yup.object().shape({
     stackname: Yup.string().matches(/[a-zA-Z\d]-+/, "The stack name can include letters (A-Z and a-z), numbers (0-9), and hyphens (-).").required(),
@@ -18,7 +19,7 @@ const schema = Yup.object().shape({
 
 const CreateStackPage = () => {
     const router = useRouter();
-
+    const token = nookies.get().token;
     return (
         <>
             <Head>
@@ -52,7 +53,7 @@ const CreateStackPage = () => {
                                             formData.append('codeFile', values.code);
                                             formData.append('disable_rollback', values.disable_rollback);
                                             formData.append('protect', values.protection);
-                                            api.post("/stacks", formData)
+                                            api.post("/stacks", formData, {headers: { "Authorization": "Bearer " + token}})
                                                 .then((response) => {
                                                     swal({
                                                         title: response.data.status,

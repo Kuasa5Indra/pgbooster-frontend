@@ -28,7 +28,7 @@ const PasswordChallengePage = () => {
                     <Row>
                         <Col sm={{ span: 8, offset: 2 }} md={{ span: 6, offset: 3 }} lg={{ span: 6, offset: 3 }} xl={{ span: 4, offset: 4 }} className="col-12">
                             <div className="login-brand">
-                                <Image src="/assets/img/stisla-fill.svg" alt="logo" width={100} height={100} className="shadow-light rounded-circle" />
+                                <Image src="/assets/img/pgbooster.png" alt="logo" width={100} height={100} className="shadow-light rounded-circle" />
                             </div>
 
                             <Card className="card-primary">
@@ -49,11 +49,11 @@ const PasswordChallengePage = () => {
                                             formData.append("new_password", values.new_password);
                                             api.post('/auth/respond/new-password', formData, {
                                                 headers: {
-                                                    session: nookies.get(null, 'session')
+                                                    session: nookies.get().session
                                                 }
                                             })
                                                 .then((response) => {
-                                                    Cookies.remove('session');
+                                                    nookies.destroy(null, 'session')
                                                     swal({
                                                         title: response.data.status,
                                                         text: response.data.message,
@@ -62,9 +62,9 @@ const PasswordChallengePage = () => {
                                                         const result = response.data.data;
                                                         if(result.AuthenticationResult){
                                                             const access_token = result.AuthenticationResult.AccessToken;
-                                                            const refresh_token = result.AuthenticationResult.RefreshToken;
+                                                            // const refresh_token = result.AuthenticationResult.RefreshToken;
                                                             nookies.set(null, 'token', access_token, { maxAge: result.AuthenticationResult.ExpiresIn, path: "/" });
-                                                            nookies.set(null, 'refresh_token', refresh_token, { maxAge: 864000, path: "/"});
+                                                            // nookies.set(null, 'refresh_token', refresh_token, { maxAge: 864000, path: "/"});
                                                             router.push('/dashboard');
                                                         }
                                                     })

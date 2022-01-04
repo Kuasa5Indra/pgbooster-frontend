@@ -8,7 +8,7 @@ import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/
 import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
-
+import nookies from "nookies";
 
 const InfrastructurePage = ({ stacks }) => {
     const router = useRouter();
@@ -117,7 +117,8 @@ const InfrastructurePage = ({ stacks }) => {
 }
 
 export async function getServerSideProps(context) {
-    const res = await api.get('/stacks')
+    const token = nookies.get(context).token;
+    const res = await api.get('/stacks', {headers: { "Authorization": "Bearer " + token}})
     const stacks = await res.data
 
     if (!stacks) {

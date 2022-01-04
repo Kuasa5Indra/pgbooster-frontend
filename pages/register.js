@@ -7,6 +7,7 @@ import "yup-phone";
 import api from "../utils/api";
 import swal from "sweetalert";
 import {useRouter} from "next/router";
+import nookies from "nookies";
 
 const schema = Yup.object().shape({
     name: Yup.string().required(),
@@ -32,7 +33,7 @@ const RegisterPage = () => {
                     <Row>
                         <Col sm={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }} lg={{ span: 8, offset: 2 }} xl={{ span: 8, offset: 2 }} className="col-12">
                             <div className="login-brand">
-                                <Image src="/assets/img/stisla-fill.svg" alt="logo" width={100} height={100} className="shadow-light rounded-circle" />
+                                <Image src="/assets/img/pgbooster.png" alt="logo" width={100} height={100} className="shadow-light rounded-circle" />
                             </div>
 
                             <Card className="card-primary">
@@ -66,6 +67,7 @@ const RegisterPage = () => {
                                                         text: response.data.message,
                                                         icon: "success",
                                                     }).then(function () {
+                                                        nookies.set(null, 'unverifiedEmail', values.email, { maxAge: 3600 });
                                                         router.push('/account/verify');
                                                     })
                                                 })

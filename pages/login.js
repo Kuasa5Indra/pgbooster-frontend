@@ -27,7 +27,7 @@ const LoginPage = () => {
           <Row>
             <Col sm={{ span: 8, offset: 2 }} md={{ span: 6, offset: 3 }} lg={{ span: 6, offset: 3 }} xl={{ span: 4, offset: 4 }} className="col-12">
               <div className="login-brand">
-                <Image src="/assets/img/stisla-fill.svg" alt="logo" width={100} height={100} className="shadow-light rounded-circle" />
+                <Image src="/assets/img/pgbooster.png" alt="logo" width={100} height={100} className="shadow-light rounded-circle" />
               </div>
 
               <Card className="card-primary">
@@ -49,9 +49,9 @@ const LoginPage = () => {
                               const result = response.data.data;
                               if(result.AuthenticationResult){
                                 const access_token = result.AuthenticationResult.AccessToken;
-                                const refresh_token = result.AuthenticationResult.RefreshToken;
+                                // const refresh_token = result.AuthenticationResult.RefreshToken;
                                 nookies.set(null, 'token', access_token, { maxAge: result.AuthenticationResult.ExpiresIn, path: "/" });
-                                nookies.set(null, 'refresh_token', refresh_token, { maxAge: 864000, path: "/"});
+                                // nookies.set(null, 'refresh_token', refresh_token, { maxAge: 864000, path: "/"});
                                 router.push('/dashboard');
                               } else if (result.ChallengeName == "NEW_PASSWORD_REQUIRED") {
                                   nookies.set(null, 'session', result.Session, { maxAge: 3600 });
@@ -68,6 +68,7 @@ const LoginPage = () => {
                                     })
                                 }
                                 else if(errorResponse.message == "UserNotConfirmedException"){
+                                    nookies.set(null, 'unverifiedEmail', values.email, { maxAge: 3600 });
                                     router.push('/account/verify');
                                 }
                             })
