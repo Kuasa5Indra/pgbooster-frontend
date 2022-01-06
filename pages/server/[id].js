@@ -64,7 +64,7 @@ const ShowInstancePage = () => {
                                                     <p>{data[0].Instances[0].PrivateIpAddress}</p>
                                                 </Col>
                                                 <Col sm={12} md={6} lg={6}>
-                                                    <b>Private IP Address</b>
+                                                    <b>Public IP Address</b>
                                                     <p>{data[0].Instances[0].PublicIpAddress}</p>
                                                 </Col>
                                                 <Col sm={12} md={6} lg={6}>

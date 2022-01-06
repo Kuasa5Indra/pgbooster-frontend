@@ -39,7 +39,7 @@ const ResetPasswordPage = () => {
                                         validateOnChange={false}
                                         validationSchema={schema}
                                         initialValues={{
-                                            email: nookies.get(null, 'email'),
+                                            email: nookies.get().email,
                                             password: "",
                                             confirm_password: "",
                                             code: ""
