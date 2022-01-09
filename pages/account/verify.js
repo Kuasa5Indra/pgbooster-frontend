@@ -1,24 +1,45 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import {Row, Col, Card, Form, Container, Button, FormControl} from 'react-bootstrap';
+import Head from "next/head";
+import {Button, Card, Col, Container, Form, FormControl, Row} from "react-bootstrap";
+import Image from "next/image";
 import {Formik} from "formik";
-import * as Yup from 'yup';
-import api from "../utils/api";
+import api from "../../utils/api";
 import {useRouter} from "next/router";
 import swal from "sweetalert";
+import * as Yup from "yup";
 import nookies from "nookies";
 
 const schema = Yup.object().shape({
-    email: Yup.string().email().required()
+    email: Yup.string().email().required(),
+    code: Yup.number().required()
 });
 
-const ForgotPasswordPage = () => {
+const VerifyAccountPage = () => {
     const router = useRouter();
+
+    const resendCode = (email) => {
+        const formData = new FormData();
+        formData.append('email', email);
+        api.post('/auth/resend-code', formData)
+            .then((response) => {
+                swal({
+                    title: response.data.status,
+                    text: response.data.message,
+                    icon: "success",
+                })
+            })
+            .catch((error) => {
+                swal({
+                    title: "Something wrong",
+                    text: "Make sure you fill an valid email",
+                    icon: "error",
+                })
+            })
+    }
 
     return (
         <>
             <Head>
-                <title>Forgot Password &mdash; PgBooster</title>
+                <title>Verify Account &mdash; PgBooster</title>
             </Head>
             <section className="section">
                 <Container className="mt-5">
@@ -29,30 +50,41 @@ const ForgotPasswordPage = () => {
                             </div>
 
                             <Card className="card-primary">
-                                <Card.Header><h4>Forgot Password</h4></Card.Header>
+                                <Card.Header><h4>Verify Account</h4></Card.Header>
                                 <Card.Body>
-                                    <p className="text-muted">We will send a link to reset your password</p>
+                                    <p className="text-muted">We need you to confirm your email</p>
                                     <Formik
+                                        validateOnChange={false}
                                         validationSchema={schema}
                                         initialValues={{
-                                            email: ""
+                                            email: nookies.get().unverifiedEmail,
+                                            code: ""
                                         }}
                                         onSubmit={(values) => {
                                             const formData = new FormData();
                                             formData.append("email", values.email);
-                                            api.post('/auth/forgot-password', formData)
+                                            formData.append("code", values.code);
+                                            api.post('/auth/register/confirm', formData)
                                                 .then((response) => {
+                                                    nookies.destroy(null, 'unverifiedEmail')
                                                     swal({
                                                         title: response.data.status,
                                                         text: response.data.message,
                                                         icon: "success",
                                                     }).then(function () {
-                                                        nookies.set(null, 'email', values.email);
-                                                        router.push('/reset-password');
+                                                        router.push('/login');
                                                     })
                                                 })
                                                 .catch((error) => {
-                                                    console.log(error.response.data.message);
+                                                    console.log(error.response.data);
+                                                    const errorResponse = error.response.data;
+                                                    if(errorResponse.message == "CodeMismatchException"){
+                                                        swal({
+                                                            title: "Something wrong",
+                                                            text: "Your code is invalid",
+                                                            icon: "error",
+                                                        })
+                                                    }
                                                 })
                                         }}
                                     >
@@ -70,7 +102,19 @@ const ForgotPasswordPage = () => {
                                                     <FormControl.Feedback type="invalid">{errors.email}</FormControl.Feedback>
                                                 </Form.Group>
                                                 <Form.Group>
-                                                    <Button type="submit" size="lg" block>Forgot Password</Button>
+                                                    <Form.Label>Code</Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="code"
+                                                        value={values.code}
+                                                        onChange={handleChange}
+                                                        isInvalid={!!errors.code}
+                                                    />
+                                                    <FormControl.Feedback type="invalid">{errors.code}</FormControl.Feedback>
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Button type="submit" size="lg" block>Verify Account</Button>
+                                                    <Button type="button" size="lg" block variant="outline-secondary" onClick={() => resendCode(values.email)}>Resend Confirmation Code</Button>
                                                 </Form.Group>
                                             </Form>
                                         )}
@@ -86,6 +130,6 @@ const ForgotPasswordPage = () => {
             </section>
         </>
     );
-}
+};
 
-export default ForgotPasswordPage;
+export default VerifyAccountPage;

@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Layout from "../../../components/layouts/Layout";
 import api from "../../../utils/api";
-import { useState } from "react";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
 import { Section, SectionHeader, SectionBody } from "../../../components/bootstrap/Section";
@@ -9,6 +8,10 @@ import { BreadcrumbHeader, BreadcrumbItem } from "../../../components/bootstrap/
 import { Card, Col, Row, Form, Button } from "react-bootstrap";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import nookies from "nookies";
+import useSWR from "swr";
+
+const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
 
 const schema = Yup.object().shape({
     stackname: Yup.string().matches(/[a-zA-Z\d]-+/, "The stack name can include letters (A-Z and a-z), numbers (0-9), and hyphens (-).").required(),
@@ -16,9 +19,11 @@ const schema = Yup.object().shape({
     disable_rollback: Yup.bool().required(),
 });
 
-const EditStackPage = ({ stack }) => {
+const EditStackPage = () => {
     const router = useRouter();
     const { name } = router.query;
+    const token = nookies.get().token;
+    const { data, error } = useSWR(name ? `/stacks/describe/${name}` : null, fetcher);
 
     return (
         <>
@@ -37,20 +42,21 @@ const EditStackPage = ({ stack }) => {
                     <SectionBody title="Update your code" lead="Update your infrastructure by updating your code">
                         <Row>
                             <Col sm={6} md={12} lg={12}>
-                                <Card>
+                                {data && <Card>
                                     <Formik
                                         validationSchema={schema}
+                                        validateOnChange={false}
                                         initialValues={{
                                             stackname: name,
                                             code: null,
-                                            disable_rollback: stack[0].DisableRollback
+                                            disable_rollback: data[0].DisableRollback
                                         }}
                                         onSubmit={(values) => {
                                             const formData = new FormData();
                                             formData.append("name", values.stackname);
                                             formData.append('codeFile', values.code);
                                             formData.append('disable_rollback', values.disable_rollback);
-                                            api.post("/stacks/update", formData)
+                                            api.post("/stacks/update", formData, {headers: { "Authorization": "Bearer " + token}})
                                                 .then((response) => {
                                                     swal({
                                                         title: response.data.status,
@@ -123,7 +129,7 @@ const EditStackPage = ({ stack }) => {
                                             </Form>
                                         )}
                                     </Formik>
-                                </Card>
+                                </Card>}
                             </Col>
                         </Row>
                     </SectionBody>
@@ -131,23 +137,6 @@ const EditStackPage = ({ stack }) => {
             </Layout>
         </>
     );
-}
-
-export async function getStaticPaths() {
-    const res = await api.get("/stacks")
-    const stacks = await res.data.data
-
-    const paths = stacks.map((stack) => ({
-        params: { name: stack.StackName },
-    }))
-
-    return { paths, fallback: false }
-}
-
-export async function getStaticProps({ params }) {
-    const res = await api.get(`/stacks/describe/${params.name}`)
-    const stack = await res.data.data
-    return { props: { stack } }
 }
 
 export default EditStackPage;

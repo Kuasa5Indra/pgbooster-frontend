@@ -7,9 +7,11 @@ import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/Sec
 import { Card, Table, Row, Col, Button } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import swal from "sweetalert";
+import nookies from "nookies";
 
 const AutoScalingInstancesPage = ({ items }) => {
     const router = useRouter();
+    const token = nookies.get().token;
     
     const terminateInstance = (id) => {
         swal({
@@ -21,7 +23,7 @@ const AutoScalingInstancesPage = ({ items }) => {
         })
             .then((willTerminate) => {
                 if (willTerminate) {
-                    api.delete(`/autoscaling/instances/${id}`)
+                    api.delete(`/autoscaling/instances/${id}`, {headers: { "Authorization": "Bearer " + token}})
                         .then((response) => {
                             swal({
                                 title: response.data.status,
@@ -108,7 +110,8 @@ const AutoScalingInstancesPage = ({ items }) => {
 }
 
 export async function getServerSideProps(context) {
-    const res = await api.get('/autoscaling/instances')
+    const token = nookies.get(context).token;
+    const res = await api.get('/autoscaling/instances', {headers: { "Authorization": "Bearer " + token}})
     const items = await res.data
 
     if (!items) {

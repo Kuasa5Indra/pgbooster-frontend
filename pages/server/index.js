@@ -7,12 +7,14 @@ import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/
 import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
+import nookies from "nookies";
 
 const ServerPage = ({ instances }) => {
     const router = useRouter();
+    const token = nookies.get().token;
 
     const startInstance = async (id) => {
-        const res = await api.get("/instances/" + id + "/start")
+        const res = await api.get("/instances/" + id + "/start", {headers: { "Authorization": "Bearer " + token}})
         const instance = await res.data
         swal({
             title: instance.status,
@@ -33,7 +35,7 @@ const ServerPage = ({ instances }) => {
         })
             .then(async (willStop) => {
                 if (willStop) {
-                    const res = await api.get("/instances/" + id + "/stop")
+                    const res = await api.get("/instances/" + id + "/stop", {headers: { "Authorization": "Bearer " + token}})
                     const instance = await res.data
                     swal({
                         title: instance.status,
@@ -47,7 +49,7 @@ const ServerPage = ({ instances }) => {
     };
 
     const rebootInstance = async (id) => {
-        const res = await api.get("/instances/" + id + "/reboot")
+        const res = await api.get("/instances/" + id + "/reboot", {headers: { "Authorization": "Bearer " + token}})
         const instance = await res.data
         swal({
             title: instance.status,
@@ -68,7 +70,7 @@ const ServerPage = ({ instances }) => {
         })
             .then(async (willTerminate) => {
                 if (willTerminate) {
-                    const res = await api.get("/instances/" + id + "/terminate")
+                    const res = await api.get("/instances/" + id + "/terminate", {headers: { "Authorization": "Bearer " + token}})
                     const instance = await res.data
                     swal({
                         title: instance.status,
@@ -163,7 +165,8 @@ const ServerPage = ({ instances }) => {
 }
 
 export async function getServerSideProps(context) {
-    const res = await api.get('/instances')
+    const token = nookies.get(context).token;
+    const res = await api.get('/instances', {headers: { "Authorization": "Bearer " + token}})
     const instances = await res.data
 
     if (!instances) {
