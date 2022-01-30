@@ -1,23 +1,27 @@
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
-const ActiveDropdownNavLink = ({routes, title, iconClassName, children}) => {
+const ActiveDropdownNavLink = ({ id, routes, title, iconClassName, children }) => {
+    const data_target = "#" + id;
     const router = useRouter();
-    let dropdownActive = '';
 
     if(routes.includes(router.asPath)){
         return (
-            <li className="nav-item dropdown active">
-                <a href="#" className="nav-link has-dropdown" data-toggle="dropdown"><i className={iconClassName}></i> <span>{title}</span></a>
-                <ul className="dropdown-menu">
+            <li className="nav-item">
+                <a className="nav-link" data-bs-target={data_target} data-bs-toggle="collapse" href="#">
+                    <i className={iconClassName}></i><span>{title}</span><i className="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id={id} className="nav-content collapse show" data-bs-parent="#sidebar-nav">
                     { children }
                 </ul>
             </li>
         );
     } else {
         return (
-            <li className="nav-item dropdown">
-                <a href="#" className="nav-link has-dropdown" data-toggle="dropdown"><i className={iconClassName}></i> <span>{title}</span></a>
-                <ul className="dropdown-menu">
+            <li className="nav-item">
+                <a className="nav-link collapsed" data-bs-target={data_target} data-bs-toggle="collapse" href="#">
+                    <i className={iconClassName}></i><span>{title}</span><i className="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id={id} className="nav-content collapse " data-bs-parent="#sidebar-nav">
                     { children }
                 </ul>
             </li>

@@ -3,7 +3,7 @@ import Layout from "../../components/layouts/Layout";
 import api from "../../utils/api";
 import { useRouter } from "next/router";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
-import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Table, Row, Col, Button } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import swal from "sweetalert";
@@ -50,36 +50,38 @@ const AutoScalingInstancesPage = ({ items }) => {
             </Head>
             <Layout>
                 <Section>
-                    <SectionHeader title="Auto Scaling">
-                        <BreadcrumbHeader>
-                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
-                            <BreadcrumbItem text="Autoscaling Instances" />
-                        </BreadcrumbHeader>
+                    <SectionHeader title="Autoscaling Instances">
+                        <Breadcrumb>
+                            <BreadcrumbItem href="/dashboard" text="Home" />
+                            <BreadcrumbItem text="Computing" />
+                            <BreadcrumbItem text="Auto Scaling" />
+                            <BreadcrumbItem text="Instances" active />
+                        </Breadcrumb>
                     </SectionHeader>
-                    <SectionBody title="Autoscaling Instances" lead="This is the list of autoscaling instances">
+                    <SectionBody>
                         <Row>
                             <Col sm={6} md={12} lg={12}>
                                 <Card>
-                                    <Card.Header><h4>Instances</h4></Card.Header>
                                     <Card.Body>
+                                        <Card.Title>Autoscaling Instances</Card.Title>
                                         {items.data.length > 0 ? (
-                                            <Table responsive="md" bordered>
+                                            <Table responsive="lg" bordered>
                                                 <thead>
                                                     <tr>
-                                                        <th>ID</th>
-                                                        <th>Type</th>
-                                                        <th>Auto Scaling Group Name</th>
-                                                        <th>Availability Zone</th>
-                                                        <th>Lifecycle State</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
+                                                        <th scope="col">ID</th>
+                                                        <th scope="col">Type</th>
+                                                        <th scope="col">Auto Scaling Group Name</th>
+                                                        <th scope="col">Availability Zone</th>
+                                                        <th scope="col">Lifecycle State</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {items.data.map((data) => {
                                                         return (
                                                             <tr key={data.InstanceId}>
-                                                                <td>{data.InstanceId}</td>
+                                                                <th scope="row">{data.InstanceId}</th>
                                                                 <td>{data.InstanceType}</td>
                                                                 <td>{data.AutoScalingGroupName}</td>
                                                                 <td>{data.AvailabilityZone}</td>
@@ -87,7 +89,7 @@ const AutoScalingInstancesPage = ({ items }) => {
                                                                 <td>{data.HealthStatus}</td>
                                                                 <td>
                                                                     <Button variant="danger" onClick={() => terminateInstance(data.InstanceId)}>
-                                                                        <i className="fas fa-power-off"></i>
+                                                                        <i className="bi bi-power"></i>
                                                                     </Button>
                                                                 </td>
                                                             </tr>
@@ -98,6 +100,7 @@ const AutoScalingInstancesPage = ({ items }) => {
                                         ) : (
                                             <EmptyState />
                                         )}
+
                                     </Card.Body>
                                 </Card>
                             </Col>

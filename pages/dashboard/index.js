@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Layout from "../../components/layouts/Layout";
-import { Hero } from "../../components/interface";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
+import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import nookies from "nookies";
 import useSWR from "swr";
 import api from "../../utils/api";
@@ -17,13 +17,36 @@ const DashboardPage = () => {
             </Head>
             <Layout>
                 <Section>
-                    <SectionHeader title="Dashboard" />
+                    <SectionHeader title="Dashboard">
+                        <Breadcrumb>
+                            <BreadcrumbItem href="/dashboard" text="Home" />
+                            <BreadcrumbItem text="Dashboard" active />
+                        </Breadcrumb>
+                    </SectionHeader>
                     <SectionBody>
-                        <Hero
-                            className="hero bg-primary text-white"
-                            title={!data ? "Welcome back" : "Welcome back, " + data.find(x => x.Name === 'name').Value}
-                            lead="A Dashboard always tell you our system performances."
-                        />
+                        <div className="row">
+                            <div className="col-lg-6">
+
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Example Card</h5>
+                                        <p>This is an examle page with no contrnt. You can use it as a starter for your custom pages.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div className="col-lg-6">
+
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Example Card</h5>
+                                        <p>This is an examle page with no contrnt. You can use it as a starter for your custom pages.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </SectionBody>
                 </Section>
             </Layout>

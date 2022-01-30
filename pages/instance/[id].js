@@ -4,7 +4,7 @@ import Layout from "../../components/layouts/Layout";
 import api from "../../utils/api";
 import dateFormat from "dateformat";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
-import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Row, Col, Spinner } from "react-bootstrap";
 import nookies from "nookies";
 import useSWR from "swr";
@@ -17,26 +17,27 @@ const ShowInstancePage = () => {
 
     const { data, error } = useSWR(id ? `/instances/${id}` : null, fetcher);
 
-    return ( 
+    return (
         <>
             <Head>
-                <title>Detail Instance &mdash; PgBooster</title>
+                <title>Detail Instance  &mdash; PgBooster</title>
             </Head>
             <Layout>
-            <Section>
+                <Section>
                     <SectionHeader title="Detail Instance">
-                        <BreadcrumbHeader>
-                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
-                            <BreadcrumbItem href="/server" text="Server" active />
-                            <BreadcrumbItem text="Detail Instance" />
-                        </BreadcrumbHeader>
+                        <Breadcrumb>
+                            <BreadcrumbItem href="/dashboard" text="Home" />
+                            <BreadcrumbItem text="Computing" />
+                            <BreadcrumbItem href="/instance" text="Instance" />
+                            <BreadcrumbItem text={id} active />
+                        </Breadcrumb>
                     </SectionHeader>
-                    <SectionBody title={id}>
+                    <SectionBody>
                         <Row>
                             <Col sm={6} md={12} lg={12}>
                                 <Card>
-                                    <Card.Header><h4>Instance Information</h4></Card.Header>
                                     <Card.Body>
+                                        <Card.Title>Detail Instance</Card.Title>
                                         {!data ? (
                                             <div className="text-center">
                                                 <Spinner animation="border" variant="primary" />

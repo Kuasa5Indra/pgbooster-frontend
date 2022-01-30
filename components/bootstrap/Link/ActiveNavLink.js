@@ -1,26 +1,30 @@
-import Link from 'next/link';
+import Link from "next/link";
 import { useRouter } from 'next/router';
 
 const ActiveNavLink = ({ href, children }) => {
     const router = useRouter();
 
-    if(router.asPath === href){
-        return ( 
-            <li className="active">
-                <Link href={href} passHref>
-                    { children }
+    if (router.asPath === href) {
+        return (
+            <li className="nav-item">
+                <Link href={href}>
+                    <a className="nav-link">
+                        {children}
+                    </a>
                 </Link>
-            </li> 
+            </li>
         );
     } else {
-        return ( 
-            <li>
-                <Link href={href} passHref>
-                    { children }
+        return (
+            <li className="nav-item">
+                <Link href={href}>
+                    <a className="nav-link collapsed">
+                        {children}
+                    </a>
                 </Link>
-            </li> 
+            </li>
         );
     }
 }
- 
+
 export default ActiveNavLink;

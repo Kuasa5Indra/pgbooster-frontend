@@ -1,14 +1,10 @@
-const EmptyState = ({ children }) => {
+import Image from "next/image";
+
+const EmptyState = () => {
     return (
-        <div className="empty-state">
-            <div className="empty-state-icon">
-                <i className="fas fa-question"></i>
-            </div>
-            <h2>We couldn't find any data</h2>
-            <p className="lead">
-                Sorry we can't find any data, to get rid of this message, make at least 1 entry.
-            </p>
-            { children }
+        <div className="text-center">
+            <Image src="/assets/img/no-data.svg" alt="no-data" width={100} height={100} />
+            <h5>We couldn't find any data</h5>
         </div>
     );
 }

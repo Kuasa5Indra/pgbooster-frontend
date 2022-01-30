@@ -1,8 +1,11 @@
 const Footer = () => {
     return (
-        <footer className="main-footer">
-            <div className="footer-left">
-            Copyright &copy; 2021 <div className="bullet"></div> PgBooster
+        <footer id="footer" className="footer">
+            <div className="copyright">
+                &copy; Copyright <strong><span>PgBooster</span></strong>. All Rights Reserved
+            </div>
+            <div className="credits">
+                2021 - {new Date().getFullYear()}
             </div>
         </footer>
     );

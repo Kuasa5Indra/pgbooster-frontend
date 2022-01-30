@@ -4,7 +4,7 @@ import swal from "sweetalert";
 import { useRouter } from "next/router";
 import api from "../../utils/api";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
-import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Col, Row, Form, Button, FormControl } from "react-bootstrap";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -23,127 +23,139 @@ const CreateStackPage = () => {
     return (
         <>
             <Head>
-                <title>Upload Code &mdash; PgBooster</title>
+                <title>Create Stack  &mdash; PgBooster</title>
             </Head>
             <Layout>
                 <Section>
-                    <SectionHeader title="Upload Code">
-                        <BreadcrumbHeader>
-                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
-                            <BreadcrumbItem href="/infrastructure" text="Code" active />
-                            <BreadcrumbItem text="Upload Code" />
-                        </BreadcrumbHeader>
+                    <SectionHeader title="Create Stack">
+                        <Breadcrumb>
+                            <BreadcrumbItem href="/dashboard" text="Home" />
+                            <BreadcrumbItem text="Infrastructure" />
+                            <BreadcrumbItem href="/infrastructure" text="Stack" />
+                            <BreadcrumbItem text="Create Stack" active />
+                        </Breadcrumb>
                     </SectionHeader>
-                    <SectionBody title="Upload your code" lead="Create your infrastructure using your code">
+                    <SectionBody>
                         <Row>
                             <Col sm={6} md={12} lg={12}>
                                 <Card>
-                                    <Formik
-                                        validationSchema={schema}
-                                        validateOnChange={false}
-                                        initialValues={{
-                                            stackname: "",
-                                            code: null,
-                                            disable_rollback: false,
-                                            protection: false
-                                        }}
-                                        onSubmit={(values) => {
-                                            const formData = new FormData();
-                                            formData.append("name", values.stackname);
-                                            formData.append('codeFile', values.code);
-                                            formData.append('disable_rollback', values.disable_rollback);
-                                            formData.append('protect', values.protection);
-                                            api.post("/stacks", formData, {headers: { "Authorization": "Bearer " + token}})
-                                                .then((response) => {
-                                                    swal({
-                                                        title: response.data.status,
-                                                        text: response.data.message,
-                                                        icon: "success",
-                                                    }).then(function () {
-                                                        router.push('/infrastructure');
+                                    <Card.Body>
+                                        <Card.Title>Create Stack</Card.Title>
+                                        <Formik
+                                            validationSchema={schema}
+                                            validateOnChange={false}
+                                            initialValues={{
+                                                stackname: "",
+                                                code: null,
+                                                disable_rollback: false,
+                                                protection: false
+                                            }}
+                                            onSubmit={(values) => {
+                                                const formData = new FormData();
+                                                formData.append("name", values.stackname);
+                                                formData.append('codeFile', values.code);
+                                                formData.append('disable_rollback', values.disable_rollback);
+                                                formData.append('protect', values.protection);
+                                                api.post("/stacks", formData, {headers: { "Authorization": "Bearer " + token}})
+                                                    .then((response) => {
+                                                        swal({
+                                                            title: response.data.status,
+                                                            text: response.data.message,
+                                                            icon: "success",
+                                                        }).then(function () {
+                                                            router.push('/infrastructure');
+                                                        })
                                                     })
-                                                })
-                                                .catch((error) => {
-                                                    var errorData = error.response.data;
-                                                    swal({
-                                                        title: errorData.title,
-                                                        text: errorData.message,
-                                                        icon: "error",
-                                                    })
-                                                    // console.error("Error on", error.response.headers);
-                                                    // console.log(error.response.data);
-                                                    // console.log(error.response.status);
-                                                });
-                                        }}
-                                    >
-                                        {({ handleSubmit, handleChange, values, errors, setFieldValue }) => (
-                                            <Form onSubmit={handleSubmit} encType="multipart/form-data">
-                                                <Card.Body>
-                                                    <Form.Group>
-                                                        <Form.Label>Stack Name</Form.Label>
-                                                        <Form.Control
-                                                            name="stackname"
-                                                            placeholder="example-stack"
-                                                            value={values.stackname}
-                                                            onChange={handleChange}
-                                                            isInvalid={!!errors.stackname}
-                                                        />
-                                                        <FormControl.Feedback type="invalid">{errors.stackname}</FormControl.Feedback>
-                                                    </Form.Group>
-                                                    <Form.Group>
-                                                        <Form.Label>JSON / YAML code</Form.Label>
-                                                        <Form.File
-                                                            name="code"
-                                                            className="form-control-file"
-                                                            accept=".json, .yaml, .yml"
-                                                            onChange={(e) => setFieldValue('code', e.target.files[0])}
-                                                            isInvalid={!!errors.code}
-                                                            feedback={errors.code}
-                                                        />
-                                                    </Form.Group>
-                                                    <Form.Group>
-                                                        <Form.Label>Disable Rollback</Form.Label>
-                                                        <Form.Check
-                                                            type="radio"
-                                                            label="True"
-                                                            name="disable_rollback"
-                                                            value="true"
-                                                            onChange={() => setFieldValue('disable_rollback', true)}
-                                                        />
-                                                        <Form.Check
-                                                            type="radio"
-                                                            label="False"
-                                                            name="disable_rollback"
-                                                            value="false"
-                                                            onChange={() => setFieldValue('disable_rollback', false)}
-                                                            defaultChecked
-                                                        />
-                                                    </Form.Group>
-                                                    <Form.Group>
-                                                        <Form.Label>Enable Termination Protection</Form.Label>
-                                                        <Form.Check
-                                                            type="radio"
-                                                            label="True"
-                                                            name="protection"
-                                                            value="true"
-                                                            onChange={() => setFieldValue('protection', true)}
-                                                        />
-                                                        <Form.Check
-                                                            type="radio"
-                                                            label="False"
-                                                            name="protection"
-                                                            value="false"
-                                                            onChange={() => setFieldValue('protection', false)}
-                                                            defaultChecked
-                                                        />
-                                                    </Form.Group>
-                                                </Card.Body>
-                                                <Card.Footer>
-                                                    <Button type="submit">Submit</Button>
-                                                </Card.Footer>
-                                            </Form>
-                                        )}
-                                    </Formik>
+                                                    .catch((error) => {
+                                                        var errorData = error.response.data;
+                                                        swal({
+                                                            title: errorData.title,
+                                                            text: errorData.message,
+                                                            icon: "error",
+                                                        })
+                                                        // console.error("Error on", error.response.headers);
+                                                        // console.log(error.response.data);
+                                                        // console.log(error.response.status);
+                                                    });
+                                            }}
+                                        >
+                                            {({ handleSubmit, handleChange, values, errors, setFieldValue }) => (
+                                                <Form onSubmit={handleSubmit} encType="multipart/form-data">
+                                                    <Row className="g-3">
+                                                        <Col bsPrefix="col-12">
+                                                            <Form.Group>
+                                                                <Form.Label>Stack Name</Form.Label>
+                                                                <Form.Control
+                                                                    name="stackname"
+                                                                    placeholder="example-stack"
+                                                                    value={values.stackname}
+                                                                    onChange={handleChange}
+                                                                    isInvalid={!!errors.stackname}
+                                                                />
+                                                                <FormControl.Feedback type="invalid">{errors.stackname}</FormControl.Feedback>
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col bsPrefix="col-12">
+                                                            <Form.Group>
+                                                                <Form.Label>JSON / YAML code</Form.Label>
+                                                                <Form.Control
+                                                                    name="code"
+                                                                    accept=".json, .yaml, .yml"
+                                                                    type="file"
+                                                                    onChange={(e) => setFieldValue('code', e.target.files[0])}
+                                                                    isInvalid={!!errors.code}
+                                                                />
+                                                                <FormControl.Feedback type="invalid">{errors.code}</FormControl.Feedback>
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col bsPrefix="col-12">
+                                                            <Form.Group>
+                                                                <Form.Label>Disable Rollback</Form.Label>
+                                                                <Form.Check
+                                                                    type="radio"
+                                                                    label="True"
+                                                                    name="disable_rollback"
+                                                                    value="true"
+                                                                    onChange={() => setFieldValue('disable_rollback', true)}
+                                                                />
+                                                                <Form.Check
+                                                                    type="radio"
+                                                                    label="False"
+                                                                    name="disable_rollback"
+                                                                    value="false"
+                                                                    onChange={() => setFieldValue('disable_rollback', false)}
+                                                                    defaultChecked
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col bsPrefix="col-12">
+                                                            <Form.Group>
+                                                                <Form.Label>Enable Termination Protection</Form.Label>
+                                                                <Form.Check
+                                                                    type="radio"
+                                                                    label="True"
+                                                                    name="protection"
+                                                                    value="true"
+                                                                    onChange={() => setFieldValue('protection', true)}
+                                                                />
+                                                                <Form.Check
+                                                                    type="radio"
+                                                                    label="False"
+                                                                    name="protection"
+                                                                    value="false"
+                                                                    onChange={() => setFieldValue('protection', false)}
+                                                                    defaultChecked
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col bsPrefix="col-12">
+                                                            <Button type="submit">Submit</Button>
+                                                        </Col>
+                                                    </Row>
+                                                </Form>
+                                            )}
+                                        </Formik>
+                                    </Card.Body>
                                 </Card>
                             </Col>
                         </Row>

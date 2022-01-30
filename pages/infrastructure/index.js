@@ -3,107 +3,65 @@ import Layout from "../../components/layouts/Layout";
 import dateFormat from "dateformat";
 import { useRouter } from "next/router";
 import api from "../../utils/api";
-import swal from "sweetalert";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
-import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { Card, Button, ButtonGroup, Table, Row, Col } from "react-bootstrap";
+import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { Card, Button, Table, Row, Col } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import nookies from "nookies";
 
 const InfrastructurePage = ({ stacks }) => {
     const router = useRouter();
 
-    const deleteStack = async (name) => {
-        swal({
-            title: "Are you sure ?",
-            text: "Once its deleted, you will not able to restore your stack",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-            .then((willDelete) => {
-                if (willDelete) {
-                    api.delete("/stacks/" + name)
-                        .then((response) => {
-                            swal({
-                                title: response.data.status,
-                                text: response.data.message,
-                                icon: "success",
-                            }).then(function () {
-                                router.reload('/infrastructure');
-                            });
-                        }).catch((error) => {
-                            // console.error("Error on", error.response);
-                            swal({
-                                title: error.response.data.status,
-                                text: error.response.data.message,
-                                icon: "error",
-                            })
-                        });
-                }
-            });
-    }
-
     return (
         <>
             <Head>
-                <title>Code &mdash; PgBooster</title>
+                <title>Stack  &mdash; PgBooster</title>
             </Head>
             <Layout>
                 <Section>
-                    <SectionHeader title="Code">
-                        <BreadcrumbHeader>
-                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
-                            <BreadcrumbItem text="Code" />
-                        </BreadcrumbHeader>
+                    <SectionHeader title="Infrastructure as Code">
+                        <Breadcrumb>
+                            <BreadcrumbItem href="/dashboard" text="Home" />
+                            <BreadcrumbItem text="Infrastructure" />
+                            <BreadcrumbItem text="Stack" active />
+                        </Breadcrumb>
                     </SectionHeader>
-                    <SectionBody title="Infrastructure as Code" lead="This is the list of stacks that have built with code">
+                    <SectionBody>
                         <Row>
                             <Col sm={6} md={12} lg={12}>
                                 <Card>
-                                    <Card.Header><h4>Stacks</h4></Card.Header>
+                                    <Card.Header><Button onClick={() => router.push('/infrastructure/create')}><i className="bi bi-file-code-fill"></i> Upload Code</Button></Card.Header>
                                     <Card.Body>
+                                        <Card.Title>Stack</Card.Title>
                                         {stacks.data.length > 0 ? (
-                                            <>
-                                                <Button onClick={() => router.push('/infrastructure/create')} className="float-left">
-                                                    <i className="fas fa-file-upload"></i> Upload Code
-                                                </Button>
-                                                <br /><br />
-                                                <Table responsive="md" bordered>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Name</th>
-                                                            <th>Status</th>
-                                                            <th>Created at</th>
-                                                            <th>Info Stack</th>
+                                            <Table responsive="lg" bordered>
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Created at</th>
+                                                        <th scope="col">Info Stack</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {stacks.data.map((data, index) => {
+                                                    return (
+                                                        <tr key={data.StackId}>
+                                                            <th scope="row">{index + 1}</th>
+                                                            <td>{data.StackName}</td>
+                                                            <td>{data.StackStatus}</td>
+                                                            <td>{dateFormat(data.CreationTime, "dd/mm/yyyy HH:MM:ss")}</td>
+                                                            <td>
+                                                                <Button variant="info" onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName } })}><i className="bi bi-info-circle"></i></Button>
+                                                            </td>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {stacks.data.map((data, index) => {
-                                                            return (
-                                                                <tr key={data.StackId}>
-                                                                    <td>{index + 1}</td>
-                                                                    <td>{data.StackName}</td>
-                                                                    <td>{data.StackStatus}</td>
-                                                                    <td>{dateFormat(data.CreationTime, "dd/mm/yyyy HH:MM:ss")}</td>
-                                                                    <td>
-                                                                        <Button variant="info" onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName } })}>
-                                                                            <i className="fas fa-info-circle"></i>
-                                                                        </Button>
-                                                                    </td>
-                                                                </tr>
-                                                            );
-                                                        })}
-                                                    </tbody>
-                                                </Table>
-                                            </>
+                                                    );
+                                                })}
+                                                </tbody>
+                                            </Table>
                                         ) : (
-                                            <EmptyState>
-                                                <Button onClick={() => router.push('/infrastructure/create')} className="float-left">
-                                                    <i className="fas fa-file-upload"></i> Upload Code
-                                                </Button>
-                                            </EmptyState>
+                                            <EmptyState />
                                         )}
                                     </Card.Body>
                                 </Card>

@@ -1,15 +1,21 @@
 import Link from 'next/link';
 
-const BreadcrumbItem = ({ active, href, text, ...props}) => {
+const BreadcrumbItem = ({ active, href, text, ...props }) => {
     if(active){
         return (
-            <div className="breadcrumb-item active"><Link href={href}><a>{text}</a></Link></div>
+            <li className="breadcrumb-item active">{text}</li>
         );
     } else {
-        return (
-            <div className="breadcrumb-item">{text}</div>
-        );
+        if(href != null){
+            return (
+                <li className="breadcrumb-item"><Link href={href}><a>{text}</a></Link></li>
+            );
+        } else {
+            return (
+                <li className="breadcrumb-item">{text}</li>
+            );
+        }
     }
 }
- 
+
 export default BreadcrumbItem;
