@@ -1,11 +1,9 @@
 const Section = ({ children }) => {
-    return ( 
-        <div className="main-content">
-            <section className="section">
-                { children }
-            </section>
-        </div>
+    return (
+        <main id="main" className="main">
+            { children }
+        </main>
     );
 }
- 
+
 export default Section;

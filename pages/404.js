@@ -5,30 +5,19 @@ const Custom404 = () => {
     return (
         <>
             <Head>
-                <title>404 - Not Found</title>
+                <title>404 &mdash; Not Found</title>
             </Head>
-            <section className="section">
-                <div className="container mt-5">
-                    <div className="page-error">
-                        <div className="page-inner">
-                            <h1>404</h1>
-                            <div className="page-description">
-                                The page you were looking for could not be found.
-                            </div>
-                            <div className="page-search">
-                                <div className="mt-3">
-                                    <Link href="/">
-                                        <a>Back to Home</a>
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="simple-footer mt-5">
-                        Copyright &copy; PgBooster 2021
-                    </div>
+            <main>
+                <div className="container">
+
+                    <section className="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+                        <h1>404</h1>
+                        <h2>The page you are looking for does not exist.</h2>
+                        <Link href="/"><a className="btn">Back to home</a></Link>
+                    </section>
+
                 </div>
-            </section>
+            </main>
         </>
     );
 }

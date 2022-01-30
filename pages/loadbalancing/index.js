@@ -3,7 +3,7 @@ import Layout from '../../components/layouts/Layout';
 import api from '../../utils/api';
 import dateFormat from "dateformat";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
-import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Table, Row, Col } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import nookies from "nookies";
@@ -13,40 +13,42 @@ const LoadBalancerPage = ({ loadbalancer }) => {
     return (
         <>
             <Head>
-                <title>Load Balancing &mdash; PgBooster</title>
+                <title>Load Balancers  &mdash; PgBooster</title>
             </Head>
             <Layout>
                 <Section>
-                    <SectionHeader title="Load Balancing">
-                        <BreadcrumbHeader>
-                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
-                            <BreadcrumbItem text="Load Balancers" />
-                        </BreadcrumbHeader>
+                    <SectionHeader title="Load Balancers">
+                        <Breadcrumb>
+                            <BreadcrumbItem href="/dashboard" text="Home" />
+                            <BreadcrumbItem text="Computing" />
+                            <BreadcrumbItem text="Load Balancing" />
+                            <BreadcrumbItem text="Load Balancers" active />
+                        </Breadcrumb>
                     </SectionHeader>
-                    <SectionBody title="Load Balancers" lead="This is the list of load balancers">
+                    <SectionBody>
                         <Row>
                             <Col sm={6} md={12} lg={12}>
                                 <Card>
-                                    <Card.Header><h4>Load Balancers</h4></Card.Header>
                                     <Card.Body>
+                                        <Card.Title>Load Balancers</Card.Title>
                                         {loadbalancer.data.length > 0 ? (
-                                            <Table responsive="md" bordered>
+                                            <Table responsive="lg" bordered>
                                                 <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>DNS Name</th>
-                                                        <th>Status</th>
-                                                        <th>Type</th>
-                                                        <th>VPC ID</th>
-                                                        <th>Availability Zones</th>
-                                                        <th>Created at</th>
-                                                    </tr>
+                                                <tr>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">DNS Name</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Type</th>
+                                                    <th scope="col">VPC ID</th>
+                                                    <th scope="col">Availability Zones</th>
+                                                    <th scope="col">Created at</th>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
                                                     {loadbalancer.data.map((data) => {
                                                         return (
                                                             <tr key={data.LoadBalancerArn}>
-                                                                <td>{data.LoadBalancerName}</td>
+                                                                <th scope="row">{data.LoadBalancerName}</th>
                                                                 <td>{data.DNSName}</td>
                                                                 <td>{data.State.Code}</td>
                                                                 <td>{data.Type}</td>

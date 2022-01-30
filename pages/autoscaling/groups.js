@@ -3,7 +3,7 @@ import Layout from "../../components/layouts/Layout";
 import dateFormat from "dateformat";
 import api from "../../utils/api";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
-import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Table, Row, Col } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import nookies from "nookies";
@@ -16,35 +16,37 @@ const AutoScalingGroupsPage = ({ items }) => {
             </Head>
             <Layout>
                 <Section>
-                    <SectionHeader title="Auto Scaling">
-                        <BreadcrumbHeader>
-                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
-                            <BreadcrumbItem text="Autoscaling Groups" />
-                        </BreadcrumbHeader>
+                    <SectionHeader title="Autoscaling Groups">
+                        <Breadcrumb>
+                            <BreadcrumbItem href="/dashboard" text="Home" />
+                            <BreadcrumbItem text="Computing" />
+                            <BreadcrumbItem text="Auto Scaling" />
+                            <BreadcrumbItem text="Groups" active />
+                        </Breadcrumb>
                     </SectionHeader>
-                    <SectionBody title="Autoscaling Groups" lead="This is the list of autoscaling groups">
+                    <SectionBody>
                         <Row>
                             <Col sm={6} md={12} lg={12}>
                                 <Card>
-                                    <Card.Header><h4>Groups</h4></Card.Header>
                                     <Card.Body>
+                                        <Card.Title>Autoscaling Groups</Card.Title>
                                         {items.data.length > 0 ? (
-                                            <Table responsive="md" bordered>
+                                            <Table responsive="lg" bordered>
                                                 <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Min Capacity</th>
-                                                        <th>Desired Capacity</th>
-                                                        <th>Max Capacity</th>
-                                                        <th>Availability Zone</th>
-                                                        <th>Created at</th>
-                                                    </tr>
+                                                <tr>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Min Capacity</th>
+                                                    <th scope="col">Desired Capacity</th>
+                                                    <th scope="col">Max Capacity</th>
+                                                    <th scope="col">Availability Zone</th>
+                                                    <th scope="col">Created at</th>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
                                                     {items.data.map((data) => {
                                                         return (
                                                             <tr key={data.AutoScalingGroupARN}>
-                                                                <td>{data.AutoScalingGroupName}</td>
+                                                                <th scope="row">{data.AutoScalingGroupName}</th>
                                                                 <td>{data.MinSize}</td>
                                                                 <td>{data.DesiredCapacity}</td>
                                                                 <td>{data.MaxSize}</td>

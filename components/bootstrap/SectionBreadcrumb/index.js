@@ -1,2 +1,2 @@
-export {default as BreadcrumbHeader} from "./BreadcrumbHeader";
+export {default as Breadcrumb} from "./Breadcrumb";
 export {default as BreadcrumbItem} from "./BreadcrumbItem";

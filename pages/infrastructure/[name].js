@@ -4,7 +4,7 @@ import dateFormat from "dateformat";
 import api from "../../utils/api";
 import { useRouter } from 'next/router';
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
-import { BreadcrumbHeader, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Row, Col, Button, ButtonGroup, Spinner } from "react-bootstrap";
 import swal from "sweetalert";
 import nookies from "nookies";
@@ -109,18 +109,19 @@ const ShowStackPage = () => {
             <Layout>
                 <Section>
                     <SectionHeader title="Detail Stack">
-                        <BreadcrumbHeader>
-                            <BreadcrumbItem href="/dashboard" text="Dashboard" active />
-                            <BreadcrumbItem href="/infrastructure" text="Code" active />
-                            <BreadcrumbItem text="Detail Stack" />
-                        </BreadcrumbHeader>
+                        <Breadcrumb>
+                            <BreadcrumbItem href="/dashboard" text="Home" />
+                            <BreadcrumbItem text="Infrastructure" />
+                            <BreadcrumbItem href="/infrastructure" text="Stack" />
+                            <BreadcrumbItem text={name} active />
+                        </Breadcrumb>
                     </SectionHeader>
-                    <SectionBody title={name}>
+                    <SectionBody>
                         <Row>
                             <Col sm={6} md={12} lg={12}>
                                 <Card>
-                                    <Card.Header><h4>Stack Information</h4></Card.Header>
                                     <Card.Body>
+                                        <Card.Title>Detail Stack</Card.Title>
                                         {!data ? (
                                             <div className="text-center">
                                                 <Spinner animation="border" variant="primary" />
@@ -141,19 +142,19 @@ const ShowStackPage = () => {
                                     <Card.Footer>
                                         <ButtonGroup aria-label="Button Operation">
                                             <Button variant="warning" onClick={() => router.push({ pathname: '/infrastructure/edit/[name]', query: { name: name } })}>
-                                                <i className="fas fa-edit"></i> Update
+                                                <i className="bi bi-pencil-square"></i> Update
                                             </Button>
                                             {data && data[0].EnableTerminationProtection ? (
                                                 <Button variant="danger" onClick={() => disableProtection()}>
-                                                    <i className="fas fa-unlock"></i> Disable Termination Protection
+                                                    <i className="bi bi-unlock-fill"></i> Disable Termination Protection
                                                 </Button>
                                             ) : (
                                                 <>
                                                     <Button variant="success" onClick={() => enableProtection()}>
-                                                        <i className="fas fa-lock"></i> Enable Termination Protection
+                                                        <i className="bi bi-lock-fill"></i> Enable Termination Protection
                                                     </Button>
                                                     <Button variant="danger" onClick={() => deleteStack(name)}>
-                                                        <i className="fas fa-trash"></i> Delete
+                                                        <i className="bi bi-trash"></i> Delete
                                                     </Button>
                                                 </>
                                             )}

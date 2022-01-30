@@ -1,55 +1,49 @@
 import Link from 'next/link';
-import { ActiveNavLink, ActiveDropdownNavLink } from '../bootstrap/Link';
+import { ActiveNavLink, ActiveDropdownNavLink, ActiveDropdownItem } from '../bootstrap/Link';
 import { useRouter } from 'next/router';
 
 const Sidebar = () => {
     const router = useRouter();
 
     return (
-        <div className="main-sidebar">
-            <aside id="sidebar-wrapper">
-                <div className="sidebar-brand">
-                    <Link href="/">
-                        <a>PgBooster</a>
-                    </Link>
-                </div>
-                <div className="sidebar-brand sidebar-brand-sm">
-                    <Link href="/">
-                        <a>PgB</a>
-                    </Link>
-                </div>
-                <ul className="sidebar-menu">
-                    <li className="menu-header">Dashboard</li>
-                    <ActiveNavLink href="/dashboard">
-                        <a className="nav-link"><i className="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
-                    </ActiveNavLink>
-                    <li className="menu-header">Compute</li>
-                    <ActiveNavLink href="/server">
-                        <a className="nav-link"><i className="fas fa-server"></i> <span>Server</span></a>
-                    </ActiveNavLink>
-                    <ActiveDropdownNavLink iconClassName="fab fa-cloudscale" title="Auto Scaling" routes={["/autoscaling/instances", "/autoscaling/groups"]}>
-                        <ActiveNavLink href="/autoscaling/instances">
-                            <a className="nav-link">Instances</a>
-                        </ActiveNavLink>
-                        <ActiveNavLink href="/autoscaling/groups">
-                            <a className="nav-link">Groups</a>
-                        </ActiveNavLink>
-                    </ActiveDropdownNavLink>
-                    <ActiveDropdownNavLink iconClassName="fas fa-balance-scale" title="Load Balancing" routes={["/loadbalancing", "/loadbalancing/groups"]}>
-                        <ActiveNavLink href="/loadbalancing">
-                            <a className="nav-link">Load Balancers</a>
-                        </ActiveNavLink>
-                        <ActiveNavLink href="/loadbalancing/groups">
-                            <a className="nav-link">Target Groups</a>
-                        </ActiveNavLink>
-                    </ActiveDropdownNavLink>
-                    <li className="menu-header">Infrastructure</li>
-                    <ActiveNavLink href="/infrastructure">
-                        <a className="nav-link"><i className="fas fa-cloud-upload-alt"></i> <span>Code</span></a>
-                    </ActiveNavLink>
-                </ul>
-            </aside>
-        </div>
+        <aside id="sidebar" className="sidebar">
+
+            <ul className="sidebar-nav" id="sidebar-nav">
+
+                <li className="nav-heading">Dashboard</li>
+
+                <ActiveNavLink href="/dashboard">
+                    <i className="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </ActiveNavLink>
+
+                <li className="nav-heading">Computing</li>
+
+                <ActiveNavLink href="/instance">
+                    <i className="ri-cpu-line"></i>
+                    <span>Instance</span>
+                </ActiveNavLink>
+
+                <ActiveDropdownNavLink title="Auto Scaling" id="auto-scaling" iconClassName="bi bi-arrow-down-up" routes={["/autoscaling/instances", "/autoscaling/groups"]}>
+                    <ActiveDropdownItem text="Instances" href="/autoscaling/instances" />
+                    <ActiveDropdownItem text="Groups" href="/autoscaling/groups" />
+                </ActiveDropdownNavLink>
+
+                <ActiveDropdownNavLink title="Load Balancing" id="load-balancing" iconClassName="ri-scales-fill" routes={["/loadbalancing", "/loadbalancing/groups"]}>
+                    <ActiveDropdownItem text="Load Balancers" href="/loadbalancing" />
+                    <ActiveDropdownItem text="Target Groups" href="/loadbalancing/groups" />
+                </ActiveDropdownNavLink>
+
+                <li className="nav-heading">Infrastructure as Code</li>
+
+                <ActiveNavLink href="/infrastructure">
+                    <i className="bi bi-stack"></i>
+                    <span>Stack</span>
+                </ActiveNavLink>
+
+            </ul>
+
+        </aside>
     );
 }
 
