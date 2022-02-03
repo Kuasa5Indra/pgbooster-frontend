@@ -1,11 +1,11 @@
 import Head from "next/head";
 import Layout from "../../components/layouts/Layout";
-import dateFormat from "dateformat";
+import { Overview, Resources, Events, Templates } from "../../components/interface/StackTabs";
 import api from "../../utils/api";
 import { useRouter } from 'next/router';
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { Card, Row, Col, Button, ButtonGroup, Spinner } from "react-bootstrap";
+import { Card, Row, Col, Button, ButtonGroup, Tabs, Tab } from "react-bootstrap";
 import swal from "sweetalert";
 import nookies from "nookies";
 import useSWR from "swr";
@@ -122,22 +122,20 @@ const ShowStackPage = () => {
                                 <Card>
                                     <Card.Body>
                                         <Card.Title>Detail Stack</Card.Title>
-                                        {!data ? (
-                                            <div className="text-center">
-                                                <Spinner animation="border" variant="primary" />
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <b>Stack Id</b> <p>{data[0].StackId}</p>
-                                                <b>Stack Name</b> <p>{data[0].StackName}</p>
-                                                <b>Stack Creation</b> <p>{dateFormat(data[0].CreationTime, "dd/mm/yyyy HH:MM:ss")}</p>
-                                                <b>Stack Status</b> <p>{data[0].StackStatus}</p>
-                                                <b>Disable Rollback</b>
-                                                <p>{data[0].DisableRollback ? "true" : "false"}</p>
-                                                <b>Enable Termination Protection</b>
-                                                <p>{data[0].EnableTerminationProtection ? "true" : "false"}</p>
-                                            </>
-                                        )}
+                                        <Tabs defaultActiveKey="overview" id="stack-info" className="nav-tabs-bordered d-flex">
+                                            <Tab eventKey="overview" title="Overview">
+                                                <Overview />
+                                            </Tab>
+                                            <Tab eventKey="events" title="Events">
+                                                <Events />
+                                            </Tab>
+                                            <Tab eventKey="resources" title="Resources">
+                                                <Resources />
+                                            </Tab>
+                                            <Tab eventKey="template" title="Template">
+                                                <Templates />
+                                            </Tab>
+                                        </Tabs>
                                     </Card.Body>
                                     <Card.Footer>
                                         <ButtonGroup aria-label="Button Operation">
