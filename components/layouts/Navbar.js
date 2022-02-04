@@ -55,20 +55,12 @@ const Navbar = () => {
                             </li>
 
                             <li>
-                                <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                    <i className="bi bi-person"></i>
-                                    <span>My Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr className="dropdown-divider" />
-                            </li>
-
-                            <li>
-                                <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                    <i className="bi bi-gear"></i>
-                                    <span>Account Settings</span>
-                                </a>
+                                <Link href="/profile">
+                                    <a className="dropdown-item d-flex align-items-center">
+                                        <i className="bi bi-person"></i>
+                                        <span>My Profile</span>
+                                    </a>
+                                </Link>
                             </li>
                             <li>
                                 <hr className="dropdown-divider" />
@@ -85,7 +77,7 @@ const Navbar = () => {
                             </li>
 
                             <li>
-                                <a className="dropdown-item d-flex align-items-center" href="#" onClick={() => logout()}>
+                                <a className="dropdown-item d-flex align-items-center" onClick={() => logout()}>
                                     <i className="bi bi-box-arrow-right"></i>
                                     <span>Sign Out</span>
                                 </a>
