@@ -1,11 +1,12 @@
 import Head from "next/head";
 import Layout from "../../../components/layouts/Layout";
 import api from "../../../utils/api";
+import {useState} from "react";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
 import { Section, SectionHeader, SectionBody } from "../../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../../components/bootstrap/SectionBreadcrumb";
-import {Card, Col, Row, Form, Button, FormControl} from "react-bootstrap";
+import {Card, Col, Row, Form, Button, FormControl, ButtonGroup} from "react-bootstrap";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import nookies from "nookies";
@@ -24,6 +25,37 @@ const EditStackPage = () => {
     const { name } = router.query;
     const token = nookies.get().token;
     const { data, error } = useSWR(name ? `/stacks/describe/${name}` : null, fetcher);
+    const [validateButton, setValidateButton] = useState(true);
+
+    const validateTemplate = (code) => {
+        if (code == null) {
+            swal({
+                title: "Something missing",
+                text: "Upload your code first!",
+                icon: "warning",
+            })
+        } else {
+            const formData = new FormData();
+            formData.append('codeFile', code);
+            api.post("/stacks/validate", formData, {headers: {"Authorization": "Bearer " + token}})
+                .then((response) => {
+                    swal({
+                        title: response.data.status,
+                        text: response.data.message,
+                        icon: "success",
+                    }).then(function () {
+                        setValidateButton(false);
+                    })
+                })
+                .catch((error) => {
+                    swal({
+                        title: "Something wrong",
+                        text: "Please review your code!",
+                        icon: "error",
+                    })
+                })
+        }
+    }
 
     return (
         <>
@@ -133,7 +165,10 @@ const EditStackPage = () => {
                                                             </Form.Group>
                                                         </Col>
                                                         <Col bsPrefix="col-12">
-                                                            <Button type="submit">Submit</Button>
+                                                            <ButtonGroup aria-label="stack-form">
+                                                                <Button type="submit">Submit</Button>
+                                                                <Button type="button" variant="success" onClick={() => validateTemplate(values.code)} disabled={!validateButton}>Validate</Button>
+                                                            </ButtonGroup>
                                                         </Col>
                                                     </Row>
                                                 </Form>
