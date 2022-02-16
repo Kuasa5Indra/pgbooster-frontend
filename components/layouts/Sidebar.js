@@ -34,6 +34,13 @@ const Sidebar = () => {
                     <ActiveDropdownItem text="Target Groups" href="/loadbalancing/groups" />
                 </ActiveDropdownNavLink>
 
+                <li className="nav-heading">Database Engine</li>
+
+                <ActiveNavLink href="/database">
+                    <i className="ri-database-2-line"></i>
+                    <span>DB Instances</span>
+                </ActiveNavLink>
+
                 <li className="nav-heading">Infrastructure as Code</li>
 
                 <ActiveNavLink href="/infrastructure">
