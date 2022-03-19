@@ -2,9 +2,8 @@ import Head from "next/head";
 import Layout from "../../components/layouts/Layout";
 import {Section, SectionBody, SectionHeader} from "../../components/bootstrap/Section";
 import {Breadcrumb, BreadcrumbItem} from "../../components/bootstrap/SectionBreadcrumb";
-import {Button, Card, Col, Row, Tab, Table, Tabs} from "react-bootstrap";
-import {Overview, ChangePassword} from "../../components/interface/ProfileTabs";
-import dateFormat from "dateformat";
+import { Card, Col, Row, Tab, Tabs} from "react-bootstrap";
+import {Overview, ChangePassword, UserCredentials} from "../../components/interface/ProfileTabs";
 
 const ProfilePage = () => {
     return (
@@ -32,6 +31,9 @@ const ProfilePage = () => {
                                             </Tab>
                                             <Tab eventKey="change-password" title="Change Password">
                                                 <ChangePassword />
+                                            </Tab>
+                                            <Tab eventKey="user-credentials" title="User Credentials">
+                                                <UserCredentials />
                                             </Tab>
                                         </Tabs>
                                     </Card.Body>
