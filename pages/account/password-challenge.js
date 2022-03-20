@@ -104,7 +104,7 @@ const PasswordChallengePage = () => {
                                                                     <Form.Label>New Password</Form.Label>
                                                                     <Form.Control
                                                                         type="password"
-                                                                        name="password"
+                                                                        name="new_password"
                                                                         value={values.new_password}
                                                                         onChange={handleChange}
                                                                         isInvalid={!!errors.new_password}

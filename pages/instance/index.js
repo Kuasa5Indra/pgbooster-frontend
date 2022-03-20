@@ -77,7 +77,7 @@ const InstancePage = ({ instances }) => {
                         text: instance.message,
                         icon: "success",
                     }).then(function () {
-                        router.reload('/server');
+                        router.reload('/instance');
                     });
                 }
             });
