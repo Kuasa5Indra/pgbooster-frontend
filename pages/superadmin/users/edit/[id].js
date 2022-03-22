@@ -55,11 +55,11 @@ const EditUserPage = () => {
                                             validationSchema={schema}
                                             validateOnChange={false}
                                             initialValues={{
-                                                name: data.UserAttributes.find(x => x.Name == 'name').Value,
-                                                phone_number: data.UserAttributes.find(x => x.Name == 'phone_number').Value,
-                                                birthdate: data.UserAttributes.find(x => x.Name == 'birthdate').Value,
-                                                gender: data.UserAttributes.find(x => x.Name == 'gender').Value,
-                                                email: data.UserAttributes.find(x => x.Name == 'email').Value,
+                                                name: data?.UserAttributes.find(x => x.Name == 'name').Value,
+                                                phone_number: data?.UserAttributes.find(x => x.Name == 'phone_number').Value,
+                                                birthdate: data?.UserAttributes.find(x => x.Name == 'birthdate').Value,
+                                                gender: data?.UserAttributes.find(x => x.Name == 'gender').Value,
+                                                email: data?.UserAttributes.find(x => x.Name == 'email').Value,
                                             }}
                                             onSubmit={(values) => {
                                                 const formData = new FormData();

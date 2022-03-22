@@ -13,7 +13,7 @@ const Navbar = () => {
     const { data, error } = useSWR('/auth/user', fetcher);
 
     const logout = () => {
-        nookies.destroy(null, 'token');
+        nookies.destroy(null, 'token', { path: '/'});
       api.get('/auth/logout', {headers: { "Authorization": "Bearer " + token}})
           .then((response) => {
               router.push('/login');

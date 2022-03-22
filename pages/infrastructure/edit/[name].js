@@ -6,7 +6,7 @@ import swal from "sweetalert";
 import { useRouter } from "next/router";
 import { Section, SectionHeader, SectionBody } from "../../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../../components/bootstrap/SectionBreadcrumb";
-import {Card, Col, Row, Form, Button, FormControl, ButtonGroup} from "react-bootstrap";
+import {Card, Col, Row, Form, Button, FormControl, ButtonGroup, Spinner} from "react-bootstrap";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import nookies from "nookies";
@@ -55,6 +55,15 @@ const EditStackPage = () => {
                     })
                 })
         }
+    }
+
+    if(!data){
+        return (
+            <div className="text-center">
+                <br />
+                <Spinner animation="border" variant="primary" />
+            </div>
+        );
     }
 
     return (
