@@ -2,14 +2,16 @@ import Head from "next/head";
 import Layout from "../../components/layouts/Layout";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
+import { AWSCredentialsAlert } from "../../components/interface";
 import nookies from "nookies";
 import useSWR from "swr";
 import api from "../../utils/api";
 
-const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
+const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data)
 
 const DashboardPage = () => {
-    const { data, error } = useSWR('/auth/user', fetcher);
+    const { data, error } = useSWR('/auth/user/credentials', fetcher);
+
     return (
         <>
             <Head>
@@ -24,6 +26,7 @@ const DashboardPage = () => {
                         </Breadcrumb>
                     </SectionHeader>
                     <SectionBody>
+                        <AWSCredentialsAlert data={data} />
                         <div className="row">
                             <div className="col-lg-6">
 

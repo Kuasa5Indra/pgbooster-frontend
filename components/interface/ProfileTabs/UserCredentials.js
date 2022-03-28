@@ -1,4 +1,5 @@
-import { Form, Row, Col, Button, FormControl, Alert, Spinner } from "react-bootstrap";
+import { Form, Row, Col, Button, FormControl, Spinner } from "react-bootstrap";
+import { AWSCredentialsAlert } from "../../interface";
 import swal from "sweetalert";
 import api from "../../../utils/api";
 import useSWR from "swr";
@@ -29,10 +30,7 @@ const UserCredentials = () => {
     return (
         <>
             <br />
-            <Alert variant={data.data.alert}>
-                <Alert.Heading>{data.message}</Alert.Heading>
-                {data.data.alert_message}
-            </Alert>
+            <AWSCredentialsAlert data={data} />
             <h5>Upload AWS Credentials</h5>
             <p>The shared credentials file on Linux, Unix, and macOS: ~/.aws/credentials</p>
             <p>The shared credentials file on Windows: C:\Users\USER_NAME\.aws\credentials</p>

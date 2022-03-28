@@ -4,11 +4,17 @@ import dateFormat from "dateformat";
 import api from "../../utils/api";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { Card, Table, Row, Col } from "react-bootstrap";
+import { Card, Table, Row, Col, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import nookies from "nookies";
+import useSWR from "swr";
 
-const AutoScalingGroupsPage = ({ items }) => {
+const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+
+const AutoScalingGroupsPage = () => {
+    const { data, error } = useSWR('/autoscaling/groups', fetcher);
+    const items = data;
+
     return (
         <>
             <Head>
@@ -30,20 +36,25 @@ const AutoScalingGroupsPage = ({ items }) => {
                                 <Card>
                                     <Card.Body>
                                         <Card.Title>Autoscaling Groups</Card.Title>
-                                        {items.data.length > 0 ? (
+                                        {!items ? (
+                                            <div className="text-center">
+                                                <br />
+                                                <Spinner animation="border" variant="primary" />
+                                            </div>
+                                        ) : (items.length > 0 ? (
                                             <Table responsive="lg" bordered>
                                                 <thead>
-                                                <tr>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">Min Capacity</th>
-                                                    <th scope="col">Desired Capacity</th>
-                                                    <th scope="col">Max Capacity</th>
-                                                    <th scope="col">Availability Zone</th>
-                                                    <th scope="col">Created at</th>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Min Capacity</th>
+                                                        <th scope="col">Desired Capacity</th>
+                                                        <th scope="col">Max Capacity</th>
+                                                        <th scope="col">Availability Zone</th>
+                                                        <th scope="col">Created at</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {items.data.map((data) => {
+                                                    {items.map((data) => {
                                                         return (
                                                             <tr key={data.AutoScalingGroupARN}>
                                                                 <th scope="row">{data.AutoScalingGroupName}</th>
@@ -59,7 +70,7 @@ const AutoScalingGroupsPage = ({ items }) => {
                                             </Table>
                                         ) : (
                                             <EmptyState />
-                                        )}
+                                        ))}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -71,20 +82,20 @@ const AutoScalingGroupsPage = ({ items }) => {
     );
 }
 
-export async function getServerSideProps(context) {
-    const token = nookies.get(context).token;
-    const res = await api.get('/autoscaling/groups',{headers: { "Authorization": "Bearer " + token}})
-    const items = await res.data
+// export async function getServerSideProps(context) {
+//     const token = nookies.get(context).token;
+//     const res = await api.get('/autoscaling/groups',{headers: { "Authorization": "Bearer " + token}})
+//     const items = await res.data
 
-    if (!items) {
-        return {
-            notFound: true,
-        }
-    }
+//     if (!items) {
+//         return {
+//             notFound: true,
+//         }
+//     }
 
-    return {
-        props: { items }
-    }
-}
+//     return {
+//         props: { items }
+//     }
+// }
 
 export default AutoScalingGroupsPage;

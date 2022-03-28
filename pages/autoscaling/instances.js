@@ -4,15 +4,20 @@ import api from "../../utils/api";
 import { useRouter } from "next/router";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { Card, Table, Row, Col, Button } from "react-bootstrap";
+import { Card, Table, Row, Col, Button, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import swal from "sweetalert";
 import nookies from "nookies";
+import useSWR from "swr";
 
-const AutoScalingInstancesPage = ({ items }) => {
+const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+
+const AutoScalingInstancesPage = () => {
     const router = useRouter();
     const token = nookies.get().token;
-    
+    const { data, error } = useSWR('/autoscaling/instances', fetcher);
+    const items = data;
+
     const terminateInstance = (id) => {
         swal({
             title: "Are you sure ?",
@@ -23,7 +28,7 @@ const AutoScalingInstancesPage = ({ items }) => {
         })
             .then((willTerminate) => {
                 if (willTerminate) {
-                    api.delete(`/autoscaling/instances/${id}`, {headers: { "Authorization": "Bearer " + token}})
+                    api.delete(`/autoscaling/instances/${id}`, { headers: { "Authorization": "Bearer " + token } })
                         .then((response) => {
                             swal({
                                 title: response.data.status,
@@ -64,7 +69,13 @@ const AutoScalingInstancesPage = ({ items }) => {
                                 <Card>
                                     <Card.Body>
                                         <Card.Title>Autoscaling Instances</Card.Title>
-                                        {items.data.length > 0 ? (
+                                        {console.log(items)}
+                                        {!items ? (
+                                            <div className="text-center">
+                                                <br />
+                                                <Spinner animation="border" variant="primary" />
+                                            </div>
+                                        ) : (items.length > 0 ? (
                                             <Table responsive="lg" bordered>
                                                 <thead>
                                                     <tr>
@@ -78,7 +89,7 @@ const AutoScalingInstancesPage = ({ items }) => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {items.data.map((data) => {
+                                                    {items.map((data) => {
                                                         return (
                                                             <tr key={data.InstanceId}>
                                                                 <th scope="row">{data.InstanceId}</th>
@@ -99,8 +110,7 @@ const AutoScalingInstancesPage = ({ items }) => {
                                             </Table>
                                         ) : (
                                             <EmptyState />
-                                        )}
-
+                                        ))}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -110,22 +120,6 @@ const AutoScalingInstancesPage = ({ items }) => {
             </Layout>
         </>
     );
-}
-
-export async function getServerSideProps(context) {
-    const token = nookies.get(context).token;
-    const res = await api.get('/autoscaling/instances', {headers: { "Authorization": "Bearer " + token}})
-    const items = await res.data
-
-    if (!items) {
-        return {
-            notFound: true,
-        }
-    }
-
-    return {
-        props: { items }
-    }
 }
 
 export default AutoScalingInstancesPage;

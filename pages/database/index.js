@@ -6,16 +6,21 @@ import api from "../../utils/api";
 import swal from "sweetalert";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import {Card, Button, Table, Row, Col, ButtonGroup } from "react-bootstrap";
+import { Card, Button, Table, Row, Col, ButtonGroup, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import nookies from "nookies";
+import useSWR from "swr";
 
-const DatabaseInstancesPage = ({ databases }) => {
+const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+
+const DatabaseInstancesPage = () => {
     const router = useRouter();
     const token = nookies.get().token;
+    const { data, error } = useSWR('/databases', fetcher);
+    const databases = data;
 
     const startDbInstance = async (id) => {
-        const res = await api.get("/databases/" + id + "/start", {headers: { "Authorization": "Bearer " + token}})
+        const res = await api.get("/databases/" + id + "/start", { headers: { "Authorization": "Bearer " + token } })
         const dbInstance = await res.data
         swal({
             title: dbInstance.status,
@@ -27,7 +32,7 @@ const DatabaseInstancesPage = ({ databases }) => {
     }
 
     const rebootDbInstance = async (id) => {
-        const res = await api.get("/databases/" + id + "/reboot", {headers: { "Authorization": "Bearer " + token}})
+        const res = await api.get("/databases/" + id + "/reboot", { headers: { "Authorization": "Bearer " + token } })
         const dbInstance = await res.data
         swal({
             title: dbInstance.status,
@@ -48,7 +53,7 @@ const DatabaseInstancesPage = ({ databases }) => {
         })
             .then(async (willStop) => {
                 if (willStop) {
-                    const res = await api.get("/databases/" + id + "/stop", {headers: { "Authorization": "Bearer " + token}})
+                    const res = await api.get("/databases/" + id + "/stop", { headers: { "Authorization": "Bearer " + token } })
                     const dbInstance = await res.data
                     swal({
                         title: dbInstance.status,
@@ -81,59 +86,64 @@ const DatabaseInstancesPage = ({ databases }) => {
                                 <Card>
                                     <Card.Body>
                                         <Card.Title>Database Instances</Card.Title>
-                                        {databases.data.length > 0 ? (
+                                        {!databases ? (
+                                            <div className="text-center">
+                                                <br />
+                                                <Spinner animation="border" variant="primary" />
+                                            </div>
+                                        ) : (databases.length > 0 ? (
                                             <Table responsive="lg" bordered>
                                                 <thead>
-                                                <tr>
-                                                    <th scope="col">DB ID</th>
-                                                    <th scope="col">Engine</th>
-                                                    <th scope="col">Region & AZ</th>
-                                                    <th scope="col">Multi-AZ</th>
-                                                    <th scope="col">VPC</th>
-                                                    <th scope="col">Instance Class</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Action</th>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="col">DB ID</th>
+                                                        <th scope="col">Engine</th>
+                                                        <th scope="col">Region & AZ</th>
+                                                        <th scope="col">Multi-AZ</th>
+                                                        <th scope="col">VPC</th>
+                                                        <th scope="col">Instance Class</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                {databases.data.map((data, index) => {
-                                                    return (
-                                                        <tr key={index}>
-                                                            <th scope="row">
-                                                                <Link href={{
-                                                                    pathname: '/database/[id]',
-                                                                    query: { id: data.DBInstanceIdentifier},
-                                                                }} replace>
-                                                                    <a>{data.DBInstanceIdentifier}</a>
-                                                                </Link>
-                                                            </th>
-                                                            <td>{data.Engine}</td>
-                                                            <td>{data.AvailabilityZone}</td>
-                                                            <td>{data.MultiAZ ? 'Yes' : 'No'}</td>
-                                                            <td>{data.DBSubnetGroup.VpcId}</td>
-                                                            <td>{data.DBInstanceClass}</td>
-                                                            <td>{data.DBInstanceStatus}</td>
-                                                            <td>
-                                                                <ButtonGroup aria-label="Button Operation">
-                                                                    <Button variant="primary" onClick={() => startDbInstance(data.DBInstanceIdentifier)}>
-                                                                        <i className="bi bi-play-circle"></i> Start
-                                                                    </Button>
-                                                                    <Button variant="danger" onClick={() => stopDbInstance(data.DBInstanceIdentifier)}>
-                                                                        <i className="bi bi-stop-circle"></i> Stop
-                                                                    </Button>
-                                                                    <Button variant="dark" onClick={() => rebootDbInstance(data.DBInstanceIdentifier)}>
-                                                                        <i className="bi bi-lightning-fill"></i> Reboot
-                                                                    </Button>
-                                                                </ButtonGroup>
-                                                            </td>
-                                                        </tr>
-                                                    );
-                                                })}
+                                                    {databases.map((data, index) => {
+                                                        return (
+                                                            <tr key={index}>
+                                                                <th scope="row">
+                                                                    <Link href={{
+                                                                        pathname: '/database/[id]',
+                                                                        query: { id: data.DBInstanceIdentifier },
+                                                                    }} replace>
+                                                                        <a>{data.DBInstanceIdentifier}</a>
+                                                                    </Link>
+                                                                </th>
+                                                                <td>{data.Engine}</td>
+                                                                <td>{data.AvailabilityZone}</td>
+                                                                <td>{data.MultiAZ ? 'Yes' : 'No'}</td>
+                                                                <td>{data.DBSubnetGroup.VpcId}</td>
+                                                                <td>{data.DBInstanceClass}</td>
+                                                                <td>{data.DBInstanceStatus}</td>
+                                                                <td>
+                                                                    <ButtonGroup aria-label="Button Operation">
+                                                                        <Button variant="primary" onClick={() => startDbInstance(data.DBInstanceIdentifier)}>
+                                                                            <i className="bi bi-play-circle"></i> Start
+                                                                        </Button>
+                                                                        <Button variant="danger" onClick={() => stopDbInstance(data.DBInstanceIdentifier)}>
+                                                                            <i className="bi bi-stop-circle"></i> Stop
+                                                                        </Button>
+                                                                        <Button variant="dark" onClick={() => rebootDbInstance(data.DBInstanceIdentifier)}>
+                                                                            <i className="bi bi-lightning-fill"></i> Reboot
+                                                                        </Button>
+                                                                    </ButtonGroup>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
                                                 </tbody>
                                             </Table>
                                         ) : (
                                             <EmptyState />
-                                        )}
+                                        ))}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -144,21 +154,5 @@ const DatabaseInstancesPage = ({ databases }) => {
         </>
     );
 };
-
-export async function getServerSideProps(context) {
-    const token = nookies.get(context).token;
-    const res = await api.get('/databases', {headers: { "Authorization": "Bearer " + token}})
-    const databases = await res.data
-
-    if (!databases) {
-        return {
-            notFound: true,
-        }
-    }
-
-    return {
-        props: { databases }
-    }
-}
 
 export default DatabaseInstancesPage;
