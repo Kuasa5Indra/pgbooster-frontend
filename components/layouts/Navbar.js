@@ -3,26 +3,26 @@ import Image from "next/image";
 import api from "../../utils/api";
 import nookies from "nookies";
 import useSWR from "swr";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
-const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
+const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
 
 const Navbar = () => {
     const router = useRouter();
-    const {token} = nookies.get();
+    const { token } = nookies.get();
     const { data, error } = useSWR('/auth/user', fetcher);
 
     const logout = () => {
-        nookies.destroy(null, 'token');
-      api.get('/auth/logout', {headers: { "Authorization": "Bearer " + token}})
-          .then((response) => {
-              router.push('/login');
-          })
-          .catch((error) => {
-              console.log(error.response.data);
-          })
+        nookies.destroy(null, 'token', { path: '/' });
+        api.get('/auth/logout', { headers: { "Authorization": "Bearer " + token } })
+            .then((response) => {
+                router.push('/login');
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+            })
     }
-    
+
     return (
         <header id="header" className="header fixed-top d-flex align-items-center">
             <div className="d-flex align-items-center justify-content-between">

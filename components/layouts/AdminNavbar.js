@@ -6,13 +6,9 @@ import useSWR from "swr";
 import swal from "sweetalert";
 import {useRouter} from "next/router";
 
-const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
-
 const AdminNavbar = () => {
     const router = useRouter();
-    // const {token} = nookies.get();
-    // const { data, error } = useSWR('/auth/user', fetcher);
-    //
+
     const logout = () => {
         console.log("Hey");
         swal({

@@ -4,11 +4,16 @@ import api from '../../utils/api';
 import dateFormat from "dateformat";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { Card, Table, Row, Col } from "react-bootstrap";
+import { Card, Table, Row, Col, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import nookies from "nookies";
+import useSWR from "swr";
 
-const LoadBalancerPage = ({ loadbalancer }) => {
+const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+
+const LoadBalancerPage = () => {
+    const { data, error } = useSWR('/loadbalancing', fetcher);
+    const loadbalancer = data;
 
     return (
         <>
@@ -31,21 +36,26 @@ const LoadBalancerPage = ({ loadbalancer }) => {
                                 <Card>
                                     <Card.Body>
                                         <Card.Title>Load Balancers</Card.Title>
-                                        {loadbalancer.data.length > 0 ? (
+                                        {!loadbalancer ? (
+                                            <div className="text-center">
+                                                <br />
+                                                <Spinner animation="border" variant="primary" />
+                                            </div>
+                                        ) : (loadbalancer.length > 0 ? (
                                             <Table responsive="lg" bordered>
                                                 <thead>
-                                                <tr>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">DNS Name</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Type</th>
-                                                    <th scope="col">VPC ID</th>
-                                                    <th scope="col">Availability Zones</th>
-                                                    <th scope="col">Created at</th>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">DNS Name</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Type</th>
+                                                        <th scope="col">VPC ID</th>
+                                                        <th scope="col">Availability Zones</th>
+                                                        <th scope="col">Created at</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {loadbalancer.data.map((data) => {
+                                                    {loadbalancer.map((data) => {
                                                         return (
                                                             <tr key={data.LoadBalancerArn}>
                                                                 <th scope="row">{data.LoadBalancerName}</th>
@@ -62,7 +72,7 @@ const LoadBalancerPage = ({ loadbalancer }) => {
                                             </Table>
                                         ) : (
                                             <EmptyState />
-                                        )}
+                                        ))}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -72,22 +82,6 @@ const LoadBalancerPage = ({ loadbalancer }) => {
             </Layout>
         </>
     );
-}
-
-export async function getServerSideProps(context) {
-    const token = nookies.get(context).token;
-    const res = await api.get('/loadbalancing', {headers: { "Authorization": "Bearer " + token}})
-    const loadbalancer = await res.data
-
-    if (!loadbalancer) {
-        return {
-            notFound: true,
-        };
-    }
-
-    return {
-        props: { loadbalancer }
-    };
 }
 
 export default LoadBalancerPage;

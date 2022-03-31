@@ -5,12 +5,17 @@ import { useRouter } from "next/router";
 import api from "../../utils/api";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { Card, Button, Table, Row, Col } from "react-bootstrap";
+import { Card, Button, Table, Row, Col, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import nookies from "nookies";
+import useSWR from "swr";
 
-const InfrastructurePage = ({ stacks }) => {
+const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+
+const InfrastructurePage = () => {
     const router = useRouter();
+    const { data, error } = useSWR('/stacks', fetcher);
+    const stacks = data;
 
     return (
         <>
@@ -33,7 +38,12 @@ const InfrastructurePage = ({ stacks }) => {
                                     <Card.Header><Button onClick={() => router.push('/infrastructure/create')}><i className="bi bi-file-code-fill"></i> Upload Code</Button></Card.Header>
                                     <Card.Body>
                                         <Card.Title>Stack</Card.Title>
-                                        {stacks.data.length > 0 ? (
+                                        {!stacks ? (
+                                            <div className="text-center">
+                                                <br />
+                                                <Spinner animation="border" variant="primary" />
+                                            </div>
+                                        ) : (stacks.length > 0 ? (
                                             <Table responsive="lg" bordered>
                                                 <thead>
                                                     <tr>
@@ -45,24 +55,24 @@ const InfrastructurePage = ({ stacks }) => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                {stacks.data.map((data, index) => {
-                                                    return (
-                                                        <tr key={data.StackId}>
-                                                            <th scope="row">{index + 1}</th>
-                                                            <td>{data.StackName}</td>
-                                                            <td>{data.StackStatus}</td>
-                                                            <td>{dateFormat(data.CreationTime, "dd/mm/yyyy HH:MM:ss")}</td>
-                                                            <td>
-                                                                <Button variant="info" onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName } })}><i className="bi bi-info-circle"></i></Button>
-                                                            </td>
-                                                        </tr>
-                                                    );
-                                                })}
+                                                    {stacks.map((data, index) => {
+                                                        return (
+                                                            <tr key={data.StackId}>
+                                                                <th scope="row">{index + 1}</th>
+                                                                <td>{data.StackName}</td>
+                                                                <td>{data.StackStatus}</td>
+                                                                <td>{dateFormat(data.CreationTime, "dd/mm/yyyy HH:MM:ss")}</td>
+                                                                <td>
+                                                                    <Button variant="info" onClick={() => router.push({ pathname: '/infrastructure/[name]', query: { name: data.StackName } })}><i className="bi bi-info-circle"></i></Button>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
                                                 </tbody>
                                             </Table>
                                         ) : (
                                             <EmptyState />
-                                        )}
+                                        ))}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -72,22 +82,6 @@ const InfrastructurePage = ({ stacks }) => {
             </Layout>
         </>
     );
-}
-
-export async function getServerSideProps(context) {
-    const token = nookies.get(context).token;
-    const res = await api.get('/stacks', {headers: { "Authorization": "Bearer " + token}})
-    const stacks = await res.data
-
-    if (!stacks) {
-        return {
-            notFound: true,
-        }
-    }
-
-    return {
-        props: { stacks }
-    }
 }
 
 export default InfrastructurePage;

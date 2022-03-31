@@ -3,11 +3,17 @@ import Layout from '../../components/layouts/Layout';
 import api from '../../utils/api';
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { Card, Table, Row, Col } from "react-bootstrap";
+import { Card, Table, Row, Col, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import nookies from "nookies";
+import useSWR from "swr";
 
-const TargetGroupsPage = ({ targets }) => {
+const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+
+const TargetGroupsPage = () => {
+    const { data, error } = useSWR('/loadbalancing/groups', fetcher);
+    const targets = data;
+
     return (
         <>
             <Head>
@@ -29,36 +35,41 @@ const TargetGroupsPage = ({ targets }) => {
                                 <Card>
                                     <Card.Body>
                                         <Card.Title>Target Groups</Card.Title>
-                                        {targets.data.length > 0 ? (
+                                        {!targets ? (
+                                            <div className="text-center">
+                                                <br />
+                                                <Spinner animation="border" variant="primary" />
+                                            </div>
+                                        ) : (targets.length > 0 ? (
                                             <Table responsive="lg" bordered>
                                                 <thead>
-                                                <tr>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">Protocol</th>
-                                                    <th scope="col">Port</th>
-                                                    <th scope="col">IP Address Type</th>
-                                                    <th scope="col">Target Type</th>
-                                                    <th scope="col">VPC ID</th>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Protocol</th>
+                                                        <th scope="col">Port</th>
+                                                        <th scope="col">IP Address Type</th>
+                                                        <th scope="col">Target Type</th>
+                                                        <th scope="col">VPC ID</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                {targets.data.map((data) => {
-                                                    return (
-                                                        <tr key={data.TargetGroupArn}>
-                                                            <th scope="row">{data.TargetGroupName}</th>
-                                                            <td>{data.Protocol}</td>
-                                                            <td>{data.Port}</td>
-                                                            <td>{data.IpAddressType}</td>
-                                                            <td>{data.TargetType}</td>
-                                                            <td>{data.VpcId}</td>
-                                                        </tr>
-                                                    )
-                                                })}
+                                                    {targets.map((data) => {
+                                                        return (
+                                                            <tr key={data.TargetGroupArn}>
+                                                                <th scope="row">{data.TargetGroupName}</th>
+                                                                <td>{data.Protocol}</td>
+                                                                <td>{data.Port}</td>
+                                                                <td>{data.IpAddressType}</td>
+                                                                <td>{data.TargetType}</td>
+                                                                <td>{data.VpcId}</td>
+                                                            </tr>
+                                                        )
+                                                    })}
                                                 </tbody>
                                             </Table>
                                         ) : (
                                             <EmptyState />
-                                        )}
+                                        ))}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -68,22 +79,6 @@ const TargetGroupsPage = ({ targets }) => {
             </Layout>
         </>
     );
-}
-
-export async function getServerSideProps(context) {
-    const token = nookies.get(context).token;
-    const res = await api.get('/loadbalancing/groups', {headers: { "Authorization": "Bearer " + token}});
-    const targets = await res.data;
-
-    if (!targets) {
-        return {
-            notFound: true
-        };
-    }
-
-    return {
-        props: { targets }
-    };
 }
 
 export default TargetGroupsPage;
