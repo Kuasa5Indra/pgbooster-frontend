@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import api from "../../utils/api";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { ConnectivitySecurity, MaintenanceBackup, Configuration } from "../../components/interface/DatabaseTabs";
+import { ConnectivitySecurity, MaintenanceBackup, Configuration, Events } from "../../components/interface/DatabaseTabs";
 import { Card, Table, Row, Col, Tabs, Tab } from "react-bootstrap";
 import nookies from "nookies";
 import useSWR from "swr";
@@ -48,6 +48,9 @@ const ShowDatabaseInstancePage = () => {
                                             </Tab>
                                             <Tab eventKey="maintenance&backup" title="Maintenance & Backup">
                                                 <MaintenanceBackup data={data} />
+                                            </Tab>
+                                            <Tab eventKey="events" title="Events">
+                                                <Events />
                                             </Tab>
                                         </Tabs>
                                     </Card.Body>
