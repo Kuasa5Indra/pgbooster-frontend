@@ -25,7 +25,7 @@ const ShowDatabaseInstancePage = () => {
             </Head>
             <Layout>
                 <Section>
-                    <SectionHeader title="Database Engine">
+                    <SectionHeader title="Database Instance">
                         <Breadcrumb>
                             <BreadcrumbItem href="/dashboard" text="Home" />
                             <BreadcrumbItem text="Database Engine" />

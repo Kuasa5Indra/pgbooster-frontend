@@ -73,7 +73,7 @@ const DatabaseInstancesPage = () => {
             </Head>
             <Layout>
                 <Section>
-                    <SectionHeader title="Database Engine">
+                    <SectionHeader title="Database Instances">
                         <Breadcrumb>
                             <BreadcrumbItem href="/dashboard" text="Home" />
                             <BreadcrumbItem text="Database Engine" />
