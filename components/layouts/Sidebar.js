@@ -41,6 +41,11 @@ const Sidebar = () => {
                     <span>DB Instances</span>
                 </ActiveNavLink>
 
+                <ActiveNavLink href="/database/cluster">
+                    <i className="ri-database-2-line"></i>
+                    <span>DB Clusters</span>
+                </ActiveNavLink>
+
                 <ActiveDropdownNavLink title="DB Snapshots" id="db-snapshots" iconClassName="ri-database-2-line" routes={["/database/snapshot", "/database/snapshot/cluster"]}>
                     <ActiveDropdownItem text="Instance" href="/database/snapshot" />
                     <ActiveDropdownItem text="Cluster" href="/database/snapshot/cluster" />
