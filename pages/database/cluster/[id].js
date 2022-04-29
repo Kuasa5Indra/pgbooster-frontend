@@ -1,34 +1,33 @@
 import Head from "next/head";
-import Layout from "../../components/layouts/Layout";
+import Layout from "../../../components/layouts/Layout";
 import { useRouter } from "next/router";
-import api from "../../utils/api";
-import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
-import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { ConnectivitySecurity, MaintenanceBackup, Configuration, Events } from "../../components/interface/DatabaseTabs";
+import api from "../../../utils/api";
+import { ConnectivitySecurity, MaintenanceBackup, Configuration, Events } from "../../../components/interface/DatabaseClusterTabs";
+import { Section, SectionHeader, SectionBody } from "../../../components/bootstrap/Section";
+import { Breadcrumb, BreadcrumbItem } from "../../../components/bootstrap/SectionBreadcrumb";
 import { Card, Row, Col, Tabs, Tab } from "react-bootstrap";
 import nookies from "nookies";
 import useSWR from "swr";
 
 const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
 
-const ShowDatabaseInstancePage = () => {
+const ShowDatabaseClusterPage = () => {
     const router = useRouter();
     const { id } = router.query;
-    const token = nookies.get().token;
-    const { data, error } = useSWR(id ? `/databases/${id}` : null, fetcher);
+    const { data, error } = useSWR(id ? `/database-clusters/${id}` : null, fetcher);
 
     return (
         <>
             <Head>
-                <title>Detail DB Instance  &mdash; PgBooster</title>
+                <title>Detail DB Cluster  &mdash; PgBooster</title>
             </Head>
             <Layout>
                 <Section>
-                    <SectionHeader title="Database Instance">
+                    <SectionHeader title="Database Cluster">
                         <Breadcrumb>
                             <BreadcrumbItem href="/dashboard" text="Home" />
                             <BreadcrumbItem text="Database Engine" />
-                            <BreadcrumbItem href="/database" text="DB Instances" />
+                            <BreadcrumbItem href="/database" text="DB Clusters" />
                             <BreadcrumbItem text={id} />
                         </Breadcrumb>
                     </SectionHeader>
@@ -37,7 +36,7 @@ const ShowDatabaseInstancePage = () => {
                             <Col sm={6} md={12} lg={12}>
                                 <Card>
                                     <Card.Body>
-                                        <Card.Title>Detail Database Instance</Card.Title>
+                                        <Card.Title>Detail Database Cluster</Card.Title>
                                         <Tabs defaultActiveKey="configuration" id="db-info" className="nav-tabs-bordered d-flex">
                                             <Tab eventKey="configuration" title="Configuration">
                                                 <Configuration data={data} />
@@ -61,6 +60,6 @@ const ShowDatabaseInstancePage = () => {
             </Layout>
         </>
     );
-};
+}
 
-export default ShowDatabaseInstancePage;
+export default ShowDatabaseClusterPage;
