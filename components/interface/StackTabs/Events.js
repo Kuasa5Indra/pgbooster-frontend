@@ -61,13 +61,13 @@ const Events = () => {
             </Table>
             {data?.NextToken ? (
                 <div className="d-grid gap-2">
-                    <Button variant="primary" type="button" disabled={isLoading} onClick={() => setNextToken(data.NextToken)}>
+                    <Button variant="primary" type="button" disabled={isLoading} onClick={() => pageHandler(data.NextToken)}>
                         {isLoading ? 'Loading' : 'Next Page'}
                     </Button>
                 </div>
             ) : (
                 <div className="d-grid gap-2">
-                    <Button variant="primary" type="button" disabled={isLoading} onClick={() => setNextToken(null)}>
+                    <Button variant="primary" type="button" disabled={isLoading} onClick={() => pageHandler(null)}>
                         {isLoading ? 'Loading' : 'Go Back'}
                     </Button>
                 </div>
