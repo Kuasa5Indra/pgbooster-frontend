@@ -10,7 +10,7 @@ import swal from "sweetalert";
 import nookies from "nookies";
 import useSWR from "swr";
 
-const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
+const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
 
 const ShowStackPage = () => {
     const router = useRouter();
@@ -28,7 +28,7 @@ const ShowStackPage = () => {
         })
             .then((willEnable) => {
                 if (willEnable) {
-                    api.get(`/stacks/update/${name}?protect=true`, {headers: { "Authorization": "Bearer " + token}})
+                    api.get(`/stacks/update/${name}?protect=true`, { headers: { "Authorization": "Bearer " + token } })
                         .then((response) => {
                             swal({
                                 title: response.data.status,
@@ -54,7 +54,7 @@ const ShowStackPage = () => {
         })
             .then((willDisable) => {
                 if (willDisable) {
-                    api.get(`/stacks/update/${name}?protect=false`, {headers: { "Authorization": "Bearer " + token}})
+                    api.get(`/stacks/update/${name}?protect=false`, { headers: { "Authorization": "Bearer " + token } })
                         .then((response) => {
                             swal({
                                 title: response.data.status,
@@ -80,7 +80,7 @@ const ShowStackPage = () => {
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    api.delete("/stacks/" + name, {headers: { "Authorization": "Bearer " + token}})
+                    api.delete("/stacks/" + name, { headers: { "Authorization": "Bearer " + token } })
                         .then((response) => {
                             swal({
                                 title: response.data.status,
