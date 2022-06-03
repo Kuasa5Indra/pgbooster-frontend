@@ -7,15 +7,13 @@ import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Row, Col, Button, ButtonGroup, Tabs, Tab } from "react-bootstrap";
 import swal from "sweetalert";
-import nookies from "nookies";
 import useSWR from "swr";
 
-const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const ShowStackPage = () => {
     const router = useRouter();
     const { name } = router.query;
-    const token = nookies.get().token;
     const { data, error } = useSWR(name ? `/stacks/describe/${name}` : null, fetcher);
 
     const enableProtection = () => {
@@ -28,7 +26,7 @@ const ShowStackPage = () => {
         })
             .then((willEnable) => {
                 if (willEnable) {
-                    api.get(`/stacks/update/${name}?protect=true`, { headers: { "Authorization": "Bearer " + token } })
+                    api.get(`/stacks/update/${name}?protect=true`)
                         .then((response) => {
                             swal({
                                 title: response.data.status,
@@ -54,7 +52,7 @@ const ShowStackPage = () => {
         })
             .then((willDisable) => {
                 if (willDisable) {
-                    api.get(`/stacks/update/${name}?protect=false`, { headers: { "Authorization": "Bearer " + token } })
+                    api.get(`/stacks/update/${name}?protect=false`)
                         .then((response) => {
                             swal({
                                 title: response.data.status,
@@ -80,7 +78,7 @@ const ShowStackPage = () => {
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    api.delete("/stacks/" + name, { headers: { "Authorization": "Bearer " + token } })
+                    api.delete("/stacks/" + name)
                         .then((response) => {
                             swal({
                                 title: response.data.status,

@@ -9,12 +9,11 @@ import { Card, Row, Col, Tabs, Tab } from "react-bootstrap";
 import nookies from "nookies";
 import useSWR from "swr";
 
-const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const ShowDatabaseInstancePage = () => {
     const router = useRouter();
     const { id } = router.query;
-    const token = nookies.get().token;
     const { data, error } = useSWR(id ? `/databases/${id}` : null, fetcher);
 
     return (

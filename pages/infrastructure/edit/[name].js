@@ -9,10 +9,9 @@ import { Breadcrumb, BreadcrumbItem } from "../../../components/bootstrap/Sectio
 import { Card, Col, Row, Form, Button, FormControl, ButtonGroup, Spinner } from "react-bootstrap";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import nookies from "nookies";
 import useSWR from "swr";
 
-const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const schema = Yup.object().shape({
     stackname: Yup.string().matches(/[a-zA-Z\d]-+/, "The stack name can include letters (A-Z and a-z), numbers (0-9), and hyphens (-).").required(),
@@ -23,7 +22,6 @@ const schema = Yup.object().shape({
 const EditStackPage = () => {
     const router = useRouter();
     const { name } = router.query;
-    const token = nookies.get().token;
     const { data, error } = useSWR(name ? `/stacks/describe/${name}` : null, fetcher);
     const [validateButton, setValidateButton] = useState(true);
 
@@ -37,7 +35,7 @@ const EditStackPage = () => {
         } else {
             const formData = new FormData();
             formData.append('codeFile', code);
-            api.post("/stacks/validate", formData, { headers: { "Authorization": "Bearer " + token } })
+            api.post("/stacks/validate", formData)
                 .then((response) => {
                     swal({
                         title: response.data.status,
@@ -98,7 +96,7 @@ const EditStackPage = () => {
                                                     formData.append("name", values.stackname);
                                                     formData.append('codeFile', values.code);
                                                     formData.append('disable_rollback', values.disable_rollback);
-                                                    api.post("/stacks/update", formData, { headers: { "Authorization": "Bearer " + token } })
+                                                    api.post("/stacks/update", formData)
                                                         .then((response) => {
                                                             swal({
                                                                 title: response.data.status,

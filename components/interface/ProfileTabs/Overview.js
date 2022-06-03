@@ -4,7 +4,7 @@ import useSWR from "swr";
 import api from "../../../utils/api";
 import { Spinner } from "react-bootstrap";
 
-const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const Overview = () => {
     const {token} = nookies.get();

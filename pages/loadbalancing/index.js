@@ -6,10 +6,9 @@ import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Table, Row, Col, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
-import nookies from "nookies";
 import useSWR from "swr";
 
-const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const LoadBalancerPage = () => {
     const { data, error } = useSWR('/loadbalancing', fetcher);

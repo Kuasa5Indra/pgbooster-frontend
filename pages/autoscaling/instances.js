@@ -7,14 +7,12 @@ import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBr
 import { Card, Table, Row, Col, Button, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
 import swal from "sweetalert";
-import nookies from "nookies";
 import useSWR from "swr";
 
-const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const AutoScalingInstancesPage = () => {
     const router = useRouter();
-    const token = nookies.get().token;
     const { data, error } = useSWR('/autoscaling/instances', fetcher);
     const items = data;
 
@@ -28,7 +26,7 @@ const AutoScalingInstancesPage = () => {
         })
             .then((willTerminate) => {
                 if (willTerminate) {
-                    api.delete(`/autoscaling/instances/${id}`, { headers: { "Authorization": "Bearer " + token } })
+                    api.delete(`/autoscaling/instances/${id}`)
                         .then((response) => {
                             swal({
                                 title: response.data.status,

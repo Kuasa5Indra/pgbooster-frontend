@@ -1,16 +1,14 @@
 import dateFormat from "dateformat";
 import {useRouter} from "next/router";
-import nookies from "nookies";
 import useSWR from "swr";
 import api from "../../../utils/api";
 import { Spinner } from "react-bootstrap";
 
-const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const Overview = () => {
     const router = useRouter();
     const { name } = router.query;
-    const token = nookies.get().token;
     const { data, error } = useSWR(name ? `/stacks/describe/${name}` : null, fetcher);
 
     if(!data){

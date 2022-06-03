@@ -1,12 +1,11 @@
 import dateFormat from "dateformat";
 import { useRouter } from "next/router";
-import nookies from "nookies";
 import useSWR from "swr";
 import api from "../../../utils/api";
 import { Spinner, Table, Button } from "react-bootstrap";
 import { useState } from "react";
 
-const fetcher = (url, nextToken) => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token, "next-token": nextToken}}).then(res => res.data.data)
+const fetcher = (url, nextToken) => api.get(url, {headers: {"next-token": nextToken}}).then(res => res.data.data)
 
 const Events = () => {
     const router = useRouter();

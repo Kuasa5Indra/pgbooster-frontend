@@ -9,7 +9,6 @@ import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBr
 import { Card, Col, Row, Form, Button, FormControl, ButtonGroup } from "react-bootstrap";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import nookies from "nookies";
 
 const schema = Yup.object().shape({
     stackname: Yup.string().matches(/[a-zA-Z\d]-+/, "The stack name can include letters (A-Z and a-z), numbers (0-9), and hyphens (-).").required(),
@@ -20,7 +19,6 @@ const schema = Yup.object().shape({
 
 const CreateStackPage = () => {
     const router = useRouter();
-    const token = nookies.get().token;
     const [validateButton, setValidateButton] = useState(true);
 
     const validateTemplate = (code) => {
@@ -33,7 +31,7 @@ const CreateStackPage = () => {
       } else {
           const formData = new FormData();
           formData.append('codeFile', code);
-          api.post("/stacks/validate", formData, {headers: { "Authorization": "Bearer " + token}})
+          api.post("/stacks/validate", formData)
               .then((response) => {
                   swal({
                       title: response.data.status,
@@ -88,7 +86,7 @@ const CreateStackPage = () => {
                                                 formData.append('codeFile', values.code);
                                                 formData.append('disable_rollback', values.disable_rollback);
                                                 formData.append('protect', values.protection);
-                                                api.post("/stacks", formData, {headers: { "Authorization": "Bearer " + token}})
+                                                api.post("/stacks", formData)
                                                     .then((response) => {
                                                         swal({
                                                             title: response.data.status,

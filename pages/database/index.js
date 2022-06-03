@@ -8,19 +8,17 @@ import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { Card, Button, Table, Row, Col, ButtonGroup, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../components/interface";
-import nookies from "nookies";
 import useSWR from "swr";
 
-const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const DatabaseInstancesPage = () => {
     const router = useRouter();
-    const token = nookies.get().token;
     const { data, error } = useSWR('/databases', fetcher);
     const databases = data;
 
     const startDbInstance = async (id) => {
-        const res = await api.get("/databases/" + id + "/start", { headers: { "Authorization": "Bearer " + token } })
+        const res = await api.get("/databases/" + id + "/start")
         const dbInstance = await res.data
         swal({
             title: dbInstance.status,
@@ -32,7 +30,7 @@ const DatabaseInstancesPage = () => {
     }
 
     const rebootDbInstance = async (id) => {
-        const res = await api.get("/databases/" + id + "/reboot", { headers: { "Authorization": "Bearer " + token } })
+        const res = await api.get("/databases/" + id + "/reboot")
         const dbInstance = await res.data
         swal({
             title: dbInstance.status,
@@ -53,7 +51,7 @@ const DatabaseInstancesPage = () => {
         })
             .then(async (willStop) => {
                 if (willStop) {
-                    const res = await api.get("/databases/" + id + "/stop", { headers: { "Authorization": "Bearer " + token } })
+                    const res = await api.get("/databases/" + id + "/stop")
                     const dbInstance = await res.data
                     swal({
                         title: dbInstance.status,
@@ -76,7 +74,7 @@ const DatabaseInstancesPage = () => {
         })
             .then(async (willFailover) => {
                 if (willFailover) {
-                    const res = await api.get("/databases/" + id + "/failover", { headers: { "Authorization": "Bearer " + token } })
+                    const res = await api.get("/databases/" + id + "/failover")
                     const dbInstance = await res.data
                     swal({
                         title: dbInstance.status,

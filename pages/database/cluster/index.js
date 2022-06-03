@@ -8,19 +8,17 @@ import { Section, SectionHeader, SectionBody } from "../../../components/bootstr
 import { Breadcrumb, BreadcrumbItem } from "../../../components/bootstrap/SectionBreadcrumb";
 import { Card, Button, Table, Row, Col, ButtonGroup, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../../components/interface";
-import nookies from "nookies";
 import useSWR from "swr";
 
-const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const DatabaseClustersPage = () => {
     const router = useRouter();
-    const token = nookies.get().token;
     const { data, error } = useSWR('/database-clusters', fetcher);
     const clusters = data;
 
     const startDbCluster = async (id) => {
-        const res = await api.get("/database-clusters/" + id + "/start", { headers: { "Authorization": "Bearer " + token } })
+        const res = await api.get("/database-clusters/" + id + "/start")
         const dbCluster = await res.data
         swal({
             title: dbCluster.status,
@@ -32,7 +30,7 @@ const DatabaseClustersPage = () => {
     }
 
     const rebootDbCluster = async (id) => {
-        const res = await api.get("/database-clusters/" + id + "/reboot", { headers: { "Authorization": "Bearer " + token } })
+        const res = await api.get("/database-clusters/" + id + "/reboot")
         const dbCluster = await res.data
         swal({
             title: dbCluster.status,
@@ -53,7 +51,7 @@ const DatabaseClustersPage = () => {
         })
             .then(async (willStop) => {
                 if (willStop) {
-                    const res = await api.get("/database-clusters/" + id + "/stop", { headers: { "Authorization": "Bearer " + token } })
+                    const res = await api.get("/database-clusters/" + id + "/stop")
                     const dbCluster = await res.data
                     swal({
                         title: dbCluster.status,
@@ -76,7 +74,7 @@ const DatabaseClustersPage = () => {
         })
             .then(async (willFailover) => {
                 if (willFailover) {
-                    const res = await api.get("/database-clusters/" + id + "/failover", { headers: { "Authorization": "Bearer " + token } })
+                    const res = await api.get("/database-clusters/" + id + "/failover")
                     const dbCluster = await res.data
                     swal({
                         title: dbCluster.status,

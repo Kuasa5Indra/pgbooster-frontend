@@ -1,15 +1,13 @@
 import {useRouter} from "next/router";
-import nookies from "nookies";
 import useSWR from "swr";
 import {Spinner} from "react-bootstrap";
 import api from "../../../utils/api";
 
-const fetcher = url => api.get(url, {headers: { "Authorization": "Bearer " + nookies.get().token}}).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const Templates = () => {
     const router = useRouter();
     const { name } = router.query;
-    const token = nookies.get().token;
     const { data, error } = useSWR(name ? `/stacks/describe/${name}/template` : null, fetcher);
 
     if(!data){

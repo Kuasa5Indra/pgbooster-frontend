@@ -7,7 +7,7 @@ import { Formik } from "formik";
 import * as Yup from 'yup';
 import nookies from "nookies";
 
-const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data)
+const fetcher = url => api.get(url).then(res => res.data)
 
 const schema = Yup.object().shape({
     config: Yup.mixed().required("File config is required"),
@@ -46,7 +46,7 @@ const UserCredentials = () => {
                     const formData = new FormData();
                     formData.append("config", values.config);
                     formData.append("credentials", values.credentials);
-                    api.post('/auth/user/credentials', formData, {headers: { "Authorization": "Bearer " + token}})
+                    api.post('/auth/user/credentials', formData)
                         .then((response) => {
                             swal({
                                 title: response.data.status,

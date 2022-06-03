@@ -30,7 +30,7 @@ const ChangePassword = () => {
                     const formData = new FormData();
                     formData.append("old_password", values.old_password);
                     formData.append("new_password", values.new_password);
-                    api.post('/auth/change-password', formData, {headers: { "Authorization": "Bearer " + token}})
+                    api.post('/auth/change-password', formData)
                         .then((response) => {
                             swal({
                                 title: response.data.status,

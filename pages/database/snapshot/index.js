@@ -6,16 +6,14 @@ import { Card, Button, Table, Row, Col, Spinner } from "react-bootstrap";
 import { EmptyState } from "../../../components/interface";
 import api from "../../../utils/api";
 import swal from "sweetalert";
-import nookies from "nookies";
 import useSWR from "swr";
 import dateFormat from "dateformat";
 import { useRouter } from "next/router";
 
-const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const DatabaseSnapshotPage = () => {
     const router = useRouter();
-    const token = nookies.get().token;
     const { data, error } = useSWR('/database/snapshots', fetcher);
     const dbSnapshots = data;
 
@@ -29,7 +27,7 @@ const DatabaseSnapshotPage = () => {
         })
             .then(async (willDelete) => {
                 if (willDelete) {
-                    api.delete("/database/snapshots/" + dbSnapshotId, { headers: { "Authorization": "Bearer " + token } })
+                    api.delete("/database/snapshots/" + dbSnapshotId)
                         .then((response) => {
                             swal({
                                 title: response.data.status,
