@@ -4,13 +4,25 @@ import api from "../../utils/api";
 import nookies from "nookies";
 import useSWR from "swr";
 import { useRouter } from "next/router";
+import {useState} from "react";
 
-const fetcher = url => api.get(url, { headers: { "Authorization": "Bearer " + nookies.get().token } }).then(res => res.data.data)
+const fetcher = url => api.get(url).then(res => res.data.data)
 
 const Navbar = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(true);
     const router = useRouter();
     const { token } = nookies.get();
     const { data, error } = useSWR('/auth/user', fetcher);
+
+    const toggleSidebarButton = () => {
+        if (sidebarOpen) {
+            setSidebarOpen(false);
+            document.body.classList.remove('toggle-sidebar');
+        } else {
+            setSidebarOpen(true);
+            document.body.classList.add('toggle-sidebar');
+        }
+    }
 
     const logout = () => {
         nookies.destroy(null, 'token', { path: '/' });
@@ -32,7 +44,7 @@ const Navbar = () => {
                         <span className="d-none d-lg-block">PgBooster</span>
                     </a>
                 </Link>
-                <i className="bi bi-list toggle-sidebar-btn"></i>
+                <i className="bi bi-list toggle-sidebar-btn" onClick={() => toggleSidebarButton()}></i>
             </div>
 
             <nav className="header-nav ms-auto">
