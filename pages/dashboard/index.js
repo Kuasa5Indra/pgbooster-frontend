@@ -3,13 +3,14 @@ import Layout from "../../components/layouts/Layout";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
 import { AWSCredentialsAlert } from "../../components/interface";
+import { Row, Col, Card } from "react-bootstrap";
 import useSWR from "swr";
 import api from "../../utils/api";
 
 const fetcher = url => api.get(url).then(res => res.data)
 
 const DashboardPage = () => {
-    const { data, error } = useSWR('/auth/user/credentials', fetcher);
+    const { data } = useSWR('/auth/user/credentials', fetcher);
 
     return (
         <>
@@ -26,29 +27,24 @@ const DashboardPage = () => {
                     </SectionHeader>
                     <SectionBody>
                         <AWSCredentialsAlert data={data} />
-                        <div className="row">
-                            <div className="col-lg-6">
-
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h5 className="card-title">Example Card</h5>
-                                        <p>This is an examle page with no contrnt. You can use it as a starter for your custom pages.</p>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div className="col-lg-6">
-
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h5 className="card-title">Example Card</h5>
-                                        <p>This is an examle page with no contrnt. You can use it as a starter for your custom pages.</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                        <Row>
+                            <Col lg={12}>
+                                <Card>
+                                    <Card.Body>
+                                        <Card.Title>Dashboard Metrics</Card.Title>
+                                        <div className="embed-responsive embed-responsive-16by9">
+                                            <iframe className="embed-responsive-item"
+                                                    src={process.env.NEXT_PUBLIC_CLOUDWATCH_DASHBOARD}
+                                                    allowFullScreen
+                                                    width="100%"
+                                                    height={1000}
+                                            >
+                                            </iframe>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
                     </SectionBody>
                 </Section>
             </Layout>
