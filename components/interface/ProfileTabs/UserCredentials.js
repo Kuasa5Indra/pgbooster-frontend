@@ -34,7 +34,7 @@ const UserCredentials = () => {
             <h5>Upload AWS Credentials</h5>
             <p>The shared credentials file on Linux, Unix, and macOS: ~/.aws/credentials</p>
             <p>The shared credentials file on Windows: C:\Users\USER_NAME\.aws\credentials</p>
-            <p>Make sure to give Cloudformation Access, EC2 Access, and RDS Access on your IAM user account</p>
+            <p>Make sure to give Cloudformation Access, EC2 Access, RDS Access and Cloudwatch on your IAM user account</p>
             <Formik
                 validationSchema={schema}
                 validateOnChange={false}

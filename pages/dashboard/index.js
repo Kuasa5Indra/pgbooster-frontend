@@ -2,7 +2,7 @@ import Head from "next/head";
 import Layout from "../../components/layouts/Layout";
 import { Section, SectionHeader, SectionBody } from "../../components/bootstrap/Section";
 import { Breadcrumb, BreadcrumbItem } from "../../components/bootstrap/SectionBreadcrumb";
-import { AWSCredentialsAlert } from "../../components/interface";
+import { AWSCredentialsAlert, DatabaseMetrics } from "../../components/interface";
 import { Row, Col, Card } from "react-bootstrap";
 import useSWR from "swr";
 import api from "../../utils/api";
@@ -32,15 +32,11 @@ const DashboardPage = () => {
                                 <Card>
                                     <Card.Body>
                                         <Card.Title>Dashboard Metrics</Card.Title>
-                                        <div className="embed-responsive embed-responsive-16by9">
-                                            <iframe className="embed-responsive-item"
-                                                    src={process.env.NEXT_PUBLIC_CLOUDWATCH_DASHBOARD}
-                                                    allowFullScreen
-                                                    width="100%"
-                                                    height={1000}
-                                            >
-                                            </iframe>
-                                        </div>
+                                        <Card.Subtitle>These are database metrics shown on dashboard</Card.Subtitle>
+                                        <br />
+                                        {data?.data.alert === 'success' && (
+                                            <DatabaseMetrics />
+                                        )}
                                     </Card.Body>
                                 </Card>
                             </Col>
